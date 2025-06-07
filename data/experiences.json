@@ -1,0 +1,52 @@
+{
+  "experiences": [
+    {
+      "id": "tunisia",
+      "country": "Tunisia",
+      "flag": "🇹🇳",
+      "role": "Home Base • Student Solutions",
+      "description": "Building solutions for real challenges faced by Tunisian students: professor availability, housing, and academic communication.",
+      "impact": "Growing up here taught me that the best technology solves everyday frustrations. DocConnect exists because I've waited outside professors' offices myself.",
+      "stats": "200+ students served",
+      "projects": ["docconnect", "student-housing"],
+      "status": "completed",
+      "year": "2018-2024"
+    },
+    {
+      "id": "turkey",
+      "country": "Turkey",
+      "flag": "🇹🇷",
+      "role": "AIESEC Volunteer • English Teacher",
+      "description": "Taught English to 40+ students using creative methods and basic AI tools. Connected across language and cultural barriers.",
+      "impact": "Discovered that technology amplifies human connection—it doesn't replace it. The best AI tools make teachers more effective, not obsolete.",
+      "stats": "40+ students taught",
+      "projects": [],
+      "status": "completed",
+      "year": "2023"
+    },
+    {
+      "id": "morocco",
+      "country": "Morocco",
+      "flag": "🇲🇦",
+      "role": "AIESEC Volunteer • Skills Trainer",
+      "description": "Facilitated soft skills workshops focusing on communication and leadership. Experienced cultural exchange acceleration.",
+      "impact": "Learned that the best solutions emerge when different perspectives meet. This experience shapes how I approach every AI project.",
+      "stats": "Multiple workshops delivered",
+      "projects": [],
+      "status": "completed",
+      "year": "2023"
+    },
+    {
+      "id": "india",
+      "country": "India",
+      "flag": "🇮🇳",
+      "role": "Upcoming • AI in Healthcare",
+      "description": "Preparing to work on AI-powered healthcare solutions that improve access and outcomes in resource-constrained environments.",
+      "impact": "Ready to apply global perspective and technical skills to healthcare challenges at scale. AI with purpose, impact, and cultural awareness.",
+      "stats": "Planning phase",
+      "projects": [],
+      "status": "upcoming",
+      "year": "2024"
+    }
+  ]
+}

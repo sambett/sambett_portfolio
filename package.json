@@ -1,0 +1,23 @@
+{
+  "name": "selma-ai-portfolio",
+  "version": "1.0.0",
+  "description": "AI Engineer Portfolio with Secure Admin Interface",
+  "author": "Selma Bettaieb",
+  "license": "MIT",
+  "scripts": {
+    "setup": "npm run install:all && npm run build:all",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "build:all": "cd frontend && npm run build && cd ../backend && npm run build",
+    "preview": "cd frontend && npm run preview",
+    "deploy:netlify": "npm run build && netlify deploy --prod",
+    "test": "cd frontend && npm test && cd ../backend && npm test",
+    "lint": "cd frontend && npm run lint && cd ../backend && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
