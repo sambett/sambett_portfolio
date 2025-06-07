@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Portfolio Demo - Cursor & Animation Effects</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        :root {
+            --cursor-x: 50vw;
+            --cursor-y: 50vh;
+            --primary: #4C1D95;
+            --secondary: #0891B2;
+            --accent: #EA580C;
+            --success: #059669;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(99,102,241,0.6) 50%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor.hover {
+            transform: scale(3);
+            background: radial-gradient(circle, rgba(234,88,12,0.8) 0%, rgba(248,113,113,0.6) 50%, transparent 70%);
+        }
+
+        /* Dynamic Background */
+        .dynamic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(
+                    circle at var(--cursor-x) var(--cursor-y), 
+                    rgba(99, 102, 241, 0.3) 0%, 
+                    rgba(8, 145, 178, 0.2) 25%, 
+                    rgba(234, 88, 12, 0.1) 50%, 
+                    transparent 70%
+                ),
+                linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+            transition: all 0.3s ease;
+        }
+
+        /* Section Styling */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        /* Bonhomme-Style Cards */
+        .project-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            color: white;
+            transform-style: preserve-3d;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 50px rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Card States - Mimicking Bonhomme Anniversary */
+        .project-card.state-1 {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(8, 145, 178, 0.1));
+        }
+
+        .project-card.state-2 {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.2), rgba(245, 158, 11, 0.1));
+        }
+
+        .project-card.state-3 {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(34, 197, 94, 0.1));
+        }
+
+        .project-card.active {
+            transform: scale(1.05) translateY(-10px);
+            z-index: 10;
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .card-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover .tech-tag {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .winner-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, #F59E0B, #EA580C);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+        }
+
+        /* Section Titles */
+        .section-title {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #a5b4fc, #fbbf24);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-flow 4s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes gradient-flow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Music Controls */
+        .music-control {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .music-control.playing {
+            animation: music-pulse 1s infinite;
+        }
+
+        @keyframes music-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Audio Visualizer */
+        .audio-visualizer {
+            position: fixed;
+            bottom: 2rem;
+            right: 5rem;
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            height: 30px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .audio-visualizer.active {
+            opacity: 1;
+        }
+
+        .visualizer-bar {
+            width: 3px;
+            background: linear-gradient(to top, #6366f1, #06b6d4);
+            border-radius: 2px;
+            animation: audio-wave 1s infinite ease-in-out;
+        }
+
+        .visualizer-bar:nth-child(1) { animation-delay: 0s; }
+        .visualizer-bar:nth-child(2) { animation-delay: 0.1s; }
+        .visualizer-bar:nth-child(3) { animation-delay: 0.2s; }
+        .visualizer-bar:nth-child(4) { animation-delay: 0.3s; }
+        .visualizer-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes audio-wave {
+            0%, 100% { height: 4px; }
+            50% { height: 20px; }
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #06b6d4, #f59e0b);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Interactive Elements */
+        .floating-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            animation: float 3s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-icon:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .section-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .project-card {
+                padding: 2rem;
+            }
+            
+            .music-control {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Performance optimizations */
+        .project-card {
+            will-change: transform;
+        }
+
+        .dynamic-background {
+            will-change: background;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Dynamic Background -->
+    <div class="dynamic-background" id="background"></div>
+
+    <!-- Music Controls -->
+    <div class="music-control" id="musicControl">🎵</div>
+    <div class="audio-visualizer" id="audioVisualizer">
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+    </div>
+
+    <!-- Section 1: Student Solutions -->
+    <section class="section">
+        <div class="floating-icon">🎓</div>
+        <div class="floating-icon">💡</div>
+        <div class="floating-icon">🚀</div>
+        
+        <div class="section-content">
+            <h2 class="section-title">Student Life Solutions</h2>
+            
+            <div class="project-card state-1" data-state="1">
+                <h3 class="card-title">DocConnect</h3>
+                <p class="card-description">
+                    Real-time professor availability tracking that transforms academic communication in Tunisia. 
+                    Students can instantly see when professors are available, reducing waiting time and improving learning efficiency.
+                </p>
+                <div class="card-tech">
+                    <span class="tech-tag">Spring Boot</span>
+                    <span class="tech-tag">Angular</span>
+                    <span class="tech-tag">MySQL</span>
+                    <span class="tech-tag">Real-time</span>
+                </div>
+                <a href="#" class="card-link">View Project →</a>
+            </div>
+            
+            <div class="project-card state-2" data-state="2">
+                <h3 class="card-title">Student Housing Platform</h3>
+                <p class="card-description">
+                    Comprehensive housing management system for Tunisian students. Features advanced search, 
+                    property management, and responsive design built from scratch with React.
+                </p>
+                <div class="card-tech">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Java Jersey</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Full CRUD</span>
+                </div>
+                <a href="#" class="card-link">View Project →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: AI Innovation -->
+    <section class="section">
+        <div class="floating-icon">🤖</div>
+        <div class="floating-icon">🏆</div>
+        <div class="floating-icon">💭</div>
+        
+        <div class="section-content">
+            <h2 class="section-title">AI Innovation</h2>
+            
+            <div class="project-card state-1" data-state="1">
+                <div class="winner-badge">🏆 Winner</div>
+                <h3 class="card-title">NeuroRAG</h3>
+                <p class="card-description">
+                    Hackathon-winning conversational AI using retrieval-augmented generation. 
+                    Makes complex information accessible through natural conversation. 
+                    Judges praised it as "most practical AI application."
+                </p>
+                <div class="card-tech">
+                    <span class="tech-tag">RAG</span>
+                    <span class="tech-tag">NLP</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Streamlit</span>
+                </div>
+                <a href="#" class="card-link">Live Demo →</a>
+            </div>
+            
+            <div class="project-card state-3" data-state="3">
+                <h3 class="card-title">Twise Sentiment Analysis</h3>
+                <p class="card-description">
+                    Event feedback AI that analyzes participant sentiment in real-time. 
+                    Helps organizers understand engagement and improve future events dynamically.
+                </p>
+                <div class="card-tech">
+                    <span class="tech-tag">NLP</span>
+                    <span class="tech-tag">Sentiment Analysis</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Real-time</span>
+                </div>
+                <a href="#" class="card-link">Try Demo →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Safety & Sustainability -->
+    <section class="section">
+        <div class="floating-icon">🛡️</div>
+        <div class="floating-icon">🌱</div>
+        <div class="floating-icon">⚡</div>
+        
+        <div class="section-content">
+            <h2 class="section-title">Safety & Sustainability</h2>
+            
+            <div class="project-card state-2" data-state="2">
+                <h3 class="card-title">Helmet Detection System</h3>
+                <p class="card-description">
+                    95% accuracy real-time safety monitoring using YOLOv8 computer vision. 
+                    Automatically detects safety violations on construction sites and prevents accidents.
+                </p>
+                <div class="card-tech">
+                    <span class="tech-tag">YOLOv8</span>
+                    <span class="tech-tag">Computer Vision</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Streamlit</span>
+                </div>
+                <a href="#" class="card-link">Live Demo →</a>
+            </div>
+            
+            <div class="project-card state-3" data-state="3">
+                <h3 class="card-title">GreenCode AI</h3>
+                <p class="card-description">
+                    AI-powered code optimization for energy efficiency and sustainability. 
+                    Uses StarCoder to automatically detect and fix energy-wasting patterns in code.
+                </p>
+                <div class="card-tech">
+                    <span class="tech-tag">StarCoder</span>
+                    <span class="tech-tag">Flask</span>
+                    <span class="tech-tag">CodeCarbon</span>
+                    <span class="tech-tag">Sustainability</span>
+                </div>
+                <a href="#" class="card-link">View Project →</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const cards = document.querySelectorAll('.project-card');
+        const background = document.getElementById('background');
+        
+        document.addEventListener('mousemove', (e) => {
+            // Update cursor position
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            // Update CSS custom properties for background
+            document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
+            document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
+        });
+
+        // Cursor hover effects
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursor.classList.add('hover');
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hover');
+            });
+        });
+
+        // Bonhomme-style card state changes
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                if (entry.isIntersecting) {
+                    card.classList.add('active');
+                    
+                    // Change state based on scroll position
+                    const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+                    const stateNumber = Math.floor(scrollPercent * 3) + 1;
+                    
+                    // Remove old state classes
+                    card.classList.remove('state-1', 'state-2', 'state-3');
+                    card.classList.add(`state-${Math.min(stateNumber, 3)}`);
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach(card => {
+            cardObserver.observe(card);
+        });
+
+        // Scroll Progress
+        const scrollProgress = document.getElementById('scrollProgress');
+        
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+
+        // Music Control
+        const musicControl = document.getElementById('musicControl');
+        const audioVisualizer = document.getElementById('audioVisualizer');
+        let isPlaying = false;
+        
+        // Create audio context for background music (silent for demo)
+        musicControl.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            
+            if (isPlaying) {
+                musicControl.textContent = '⏸️';
+                musicControl.classList.add('playing');
+                audioVisualizer.classList.add('active');
+            } else {
+                musicControl.textContent = '🎵';
+                musicControl.classList.remove('playing');
+                audioVisualizer.classList.remove('active');
+            }
+        });
+
+        // Advanced card interactions
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Create ripple effect
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '100px';
+                ripple.style.height = '100px';
+                ripple.style.background = 'rgba(255, 255, 255, 0.1)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                
+                const rect = card.getBoundingClientRect();
+                const size = 100;
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                card.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Smooth scrolling performance optimization
+        let ticking = false;
+        
+        function updateOnScroll() {
+            // Only update if not already updating
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    // Update scroll progress
+                    const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+                    scrollProgress.style.width = scrollPercent + '%';
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        window.addEventListener('scroll', updateOnScroll);
+
+        // Add some random floating animations
+        setInterval(() => {
+            const floatingIcons = document.querySelectorAll('.floating-icon');
+            floatingIcons.forEach(icon => {
+                const randomX = (Math.random() - 0.5) * 20;
+                const randomY = (Math.random() - 0.5) * 20;
+                icon.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            });
+        }, 3000);
+    </script>
+</body>
+</html>
