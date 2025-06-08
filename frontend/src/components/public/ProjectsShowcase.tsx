@@ -4,6 +4,37 @@ import { Search, Filter, ExternalLink, Github, Calendar, Tag } from 'lucide-reac
 import { api } from '../../utils/api'
 import type { Project } from '../../types'
 
+// Fallback projects data
+const FALLBACK_PROJECTS: Project[] = [
+  {
+    _id: 'neurorag',
+    title: 'NeuroRAG',
+    description: 'Hackathon-winning conversational AI using retrieval-augmented generation. Judges praised it as "most practical AI application."',
+    category: 'AI',
+    technologies: ['RAG', 'NLP', 'Python', 'Streamlit'],
+    featured: true,
+    date: '2024-01-15T00:00:00.000Z'
+  },
+  {
+    _id: 'docconnect',
+    title: 'DocConnect & Student Housing',
+    description: 'Real-time professor availability tracking + comprehensive housing platform serving 200+ students in Tunisia.',
+    category: 'Web Development',
+    technologies: ['Spring Boot', 'Angular', 'MySQL', 'React'],
+    featured: true,
+    date: '2023-09-01T00:00:00.000Z'
+  },
+  {
+    _id: 'helmet-detection',
+    title: 'Helmet Detection System',
+    description: '95% accuracy real-time safety monitoring using YOLOv8 computer vision for construction site safety.',
+    category: 'AI',
+    technologies: ['YOLOv8', 'Computer Vision', 'Python', 'Streamlit'],
+    featured: true,
+    date: '2023-11-01T00:00:00.000Z'
+  }
+]
+
 interface ProjectsShowcaseProps {
   limit?: number
 }
@@ -18,6 +49,21 @@ export const ProjectsShowcase = ({ limit }: ProjectsShowcaseProps) => {
 
   const categories = ['All', 'AI', 'Optimization', 'DevOps', 'Global Impact', 'Web Development']
 
+  // Helper function to get technologies from either 'technologies' or 'techStack'
+  const getTechnologies = (project: any): string[] => {
+    return project.technologies || project.techStack || []
+  }
+
+  // Helper function to normalize project data
+  const normalizeProject = (project: any): Project => {
+    return {
+      ...project,
+      _id: project._id || project.id,
+      technologies: getTechnologies(project),
+      date: project.date || project.createdAt || new Date().toISOString()
+    }
+  }
+
   useEffect(() => {
     fetchProjects()
   }, [])
@@ -30,34 +76,50 @@ export const ProjectsShowcase = ({ limit }: ProjectsShowcaseProps) => {
     try {
       setLoading(true)
       const response = await api.get('/api/projects')
-      setProjects(response.data)
+      // Extract the projects array from the response
+      const rawProjects = response.data?.projects || []
+      // Normalize the project data to ensure consistent structure
+      const normalizedProjects = rawProjects.map(normalizeProject)
+      setProjects(normalizedProjects)
+      console.log('Projects loaded from API:', normalizedProjects.length)
     } catch (err) {
-      setError('Failed to load projects')
-      console.error('Error fetching projects:', err)
+      console.warn('API failed, using fallback data:', err.message)
+      // Use fallback data if API fails (backend not running)
+      setProjects(FALLBACK_PROJECTS)
+      setError('') // Clear error since we have fallback data
     } finally {
       setLoading(false)
     }
   }
 
   const filterProjects = () => {
+    // Safety check: ensure projects is an array
+    if (!Array.isArray(projects)) {
+      console.warn('Projects is not an array:', projects)
+      setFilteredProjects([])
+      return
+    }
+    
     let filtered = [...projects]
 
     // Filter by category
     if (selectedCategory !== 'All') {
-      filtered = filtered.filter(project => 
-        project.category === selectedCategory || 
-        project.technologies.some(tech => tech.toLowerCase().includes(selectedCategory.toLowerCase()))
-      )
+      filtered = filtered.filter(project => {
+        const technologies = getTechnologies(project)
+        return project.category === selectedCategory || 
+               technologies.some(tech => tech.toLowerCase().includes(selectedCategory.toLowerCase()))
+      })
     }
 
     // Filter by search term
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
-      filtered = filtered.filter(project =>
-        project.title.toLowerCase().includes(term) ||
-        project.description.toLowerCase().includes(term) ||
-        project.technologies.some(tech => tech.toLowerCase().includes(term))
-      )
+      filtered = filtered.filter(project => {
+        const technologies = getTechnologies(project)
+        return project.title.toLowerCase().includes(term) ||
+               project.description.toLowerCase().includes(term) ||
+               technologies.some(tech => tech.toLowerCase().includes(term))
+      })
     }
 
     // Apply limit if specified
@@ -231,7 +293,7 @@ export const ProjectsShowcase = ({ limit }: ProjectsShowcaseProps) => {
                   {/* Technologies */}
                   <div className="mb-4">
                     <div className="flex flex-wrap gap-2">
-                      {project.technologies.slice(0, 3).map((tech) => (
+                      {getTechnologies(project).slice(0, 3).map((tech) => (
                         <span
                           key={tech}
                           className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
@@ -239,9 +301,9 @@ export const ProjectsShowcase = ({ limit }: ProjectsShowcaseProps) => {
                           {tech}
                         </span>
                       ))}
-                      {project.technologies.length > 3 && (
+                      {getTechnologies(project).length > 3 && (
                         <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
-                          +{project.technologies.length - 3} more
+                          +{getTechnologies(project).length - 3} more
                         </span>
                       )}
                     </div>
