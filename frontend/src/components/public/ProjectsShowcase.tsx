@@ -83,7 +83,8 @@ export const ProjectsShowcase = ({ limit }: ProjectsShowcaseProps) => {
       setProjects(normalizedProjects)
       console.log('Projects loaded from API:', normalizedProjects.length)
     } catch (err) {
-      console.warn('API failed, using fallback data:', err.message)
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      console.warn('API failed, using fallback data:', errorMessage)
       // Use fallback data if API fails (backend not running)
       setProjects(FALLBACK_PROJECTS)
       setError('') // Clear error since we have fallback data
