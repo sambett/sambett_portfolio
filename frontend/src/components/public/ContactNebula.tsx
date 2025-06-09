@@ -110,13 +110,13 @@ export const ContactNebula: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Options */}
           <motion.div
-            className="space-y-6"
+            className="space-y-4 sm:space-y-6"
             variants={itemVariants}
           >
-            <h3 className="text-3xl font-bold text-white mb-8 text-center lg:text-left">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center lg:text-left px-4 lg:px-0">
               Choose Your Communication Channel
             </h3>
             
@@ -126,7 +126,7 @@ export const ContactNebula: React.FC = () => {
               return (
                 <motion.div
                   key={option.id}
-                  className={`relative p-6 rounded-2xl ${option.bgColor} border backdrop-blur-sm cursor-pointer group overflow-hidden`}
+                  className={`relative p-4 sm:p-6 mx-4 lg:mx-0 rounded-2xl ${option.bgColor} border backdrop-blur-sm cursor-pointer group overflow-hidden`}
                   whileHover={{ scale: 1.02, y: -5 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleContactClick(option)}
@@ -134,22 +134,22 @@ export const ContactNebula: React.FC = () => {
                   {/* Background Gradient on Hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${option.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                   
-                  <div className="relative z-10 flex items-center space-x-4">
-                    <div className={`p-3 rounded-full bg-gradient-to-br ${option.color} text-white`}>
-                      <IconComponent className="w-6 h-6" />
+                  <div className="relative z-10 flex items-center space-x-3 sm:space-x-4">
+                    <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-br ${option.color} text-white flex-shrink-0`}>
+                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     
-                    <div className="flex-1">
-                      <h4 className="text-xl font-semibold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-300">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-lg sm:text-xl font-semibold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-300">
                         {option.title}
                       </h4>
-                      <p className="text-gray-400 mt-1">
+                      <p className="text-gray-400 mt-1 text-sm sm:text-base line-clamp-2">
                         {option.description}
                       </p>
                     </div>
                     
-                    <div className="text-gray-400 group-hover:text-white transition-colors">
-                      <Send className="w-5 h-5" />
+                    <div className="text-gray-400 group-hover:text-white transition-colors flex-shrink-0">
+                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                   </div>
 
@@ -181,87 +181,108 @@ export const ContactNebula: React.FC = () => {
             })}
           </motion.div>
 
-          {/* Quick Contact Form */}
+          {/* Embedded Contact Card */}
           <motion.div
             className="space-y-6"
             variants={itemVariants}
           >
-            <h3 className="text-3xl font-bold text-white mb-8 text-center lg:text-left">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center lg:text-left px-4 lg:px-0">
               Quick Message Portal
             </h3>
             
-            <form onSubmit={handleFormSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors"
-                    placeholder="Enter your name"
-                    required
-                  />
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8 mx-4 lg:mx-0">
+              <form onSubmit={handleFormSubmit} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors text-sm sm:text-base"
+                      placeholder="Enter your name"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors text-sm sm:text-base"
+                      placeholder="your.email@example.com"
+                      required
+                    />
+                  </div>
                 </div>
-                
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors"
-                    placeholder="your.email@example.com"
-                    required
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Project Type
-                </label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-purple-400 transition-colors"
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Project Type
+                  </label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-purple-400 transition-colors text-sm sm:text-base"
+                  >
+                    <option value="collaboration">AI/Tech Collaboration</option>
+                    <option value="volunteer">Volunteer Opportunity</option>
+                    <option value="consulting">Consulting Project</option>
+                    <option value="speaking">Speaking Engagement</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Your Message
+                  </label>
+                  <textarea
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    rows={4}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors resize-none text-sm sm:text-base"
+                    placeholder="Tell me about your project, idea, or how we can work together..."
+                    required
+                  />
+                </div>
+
+                <motion.button
+                  type="submit"
+                  className="w-full py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <option value="collaboration">AI/Tech Collaboration</option>
-                  <option value="volunteer">Volunteer Opportunity</option>
-                  <option value="consulting">Consulting Project</option>
-                  <option value="speaking">Speaking Engagement</option>
-                  <option value="other">Other</option>
-                </select>
+                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>Send Message to the Universe</span>
+                </motion.button>
+              </form>
+              
+              {/* Social Links at Bottom */}
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <p className="text-gray-400 text-sm text-center mb-4">Or connect with me directly:</p>
+                <div className="flex justify-center space-x-4">
+                  <a href="https://github.com/sambett" target="_blank" rel="noopener noreferrer" 
+                     className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                    <Github className="w-5 h-5 text-gray-400 hover:text-white" />
+                  </a>
+                  <a href="https://linkedin.com/in/selma-bettaieb" target="_blank" rel="noopener noreferrer"
+                     className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                    <Linkedin className="w-5 h-5 text-gray-400 hover:text-white" />
+                  </a>
+                  <a href="mailto:selma.bettaieb@example.com" 
+                     className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                    <Mail className="w-5 h-5 text-gray-400 hover:text-white" />
+                  </a>
+                </div>
               </div>
-
-              <div>
-                <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Your Message
-                </label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  rows={5}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors resize-none"
-                  placeholder="Tell me about your project, idea, or how we can work together..."
-                  required
-                />
-              </div>
-
-              <motion.button
-                type="submit"
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-2"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Send className="w-5 h-5" />
-                <span>Send Message to the Universe</span>
-              </motion.button>
-            </form>
+            </div>
           </motion.div>
         </div>
 

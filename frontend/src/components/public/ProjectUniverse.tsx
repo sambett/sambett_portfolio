@@ -129,15 +129,15 @@ export const ProjectUniverse: React.FC = () => {
       >
         {/* Section Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16 px-4"
           variants={cardVariants}
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
               Project Universe
             </span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Each project is a different galaxy in my universe of solutions. 
             Click to enter their world and discover the impact they create.
           </p>
@@ -145,7 +145,7 @@ export const ProjectUniverse: React.FC = () => {
 
         {/* Projects Grid */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4"
           variants={containerVariants}
         >
           {projects.map((project) => {
@@ -155,7 +155,7 @@ export const ProjectUniverse: React.FC = () => {
             return (
               <motion.div
                 key={project.id}
-                className={`relative p-6 rounded-2xl ${theme.bg} ${theme.border} border backdrop-blur-sm cursor-pointer group overflow-hidden`}
+                className={`relative p-4 sm:p-6 rounded-2xl ${theme.bg} ${theme.border} border backdrop-blur-sm cursor-pointer group overflow-hidden`}
                 variants={cardVariants}
                 whileHover="hover"
                 onClick={() => handleProjectClick(project)}
@@ -164,29 +164,29 @@ export const ProjectUniverse: React.FC = () => {
                 <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                 
                 {/* Category Icon */}
-                <div className="flex items-center justify-between mb-4">
-                  <IconComponent className={`w-8 h-8 ${theme.color}`} />
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <IconComponent className={`w-6 h-6 sm:w-8 sm:h-8 ${theme.color}`} />
                   {project.featured && (
                     <div className="flex items-center space-x-1 text-yellow-400">
-                      <Award className="w-4 h-4" />
-                      <span className="text-sm">Featured</span>
+                      <Award className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="text-xs sm:text-sm">Featured</span>
                     </div>
                   )}
                 </div>
 
                 {/* Project Title */}
-                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-cyan-300">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-cyan-300 line-clamp-2">
                   {project.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-300 mb-4 line-clamp-3">
+                <p className="text-gray-300 mb-3 sm:mb-4 line-clamp-3 text-sm sm:text-base">
                   {project.description}
                 </p>
 
                 {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.techStack.slice(0, 3).map((tech, index) => (
+                <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
+                  {project.techStack.slice(0, 2).map((tech, index) => (
                     <span
                       key={index}
                       className={`px-2 py-1 text-xs rounded-full ${theme.bg} ${theme.color} border ${theme.border}`}
@@ -194,15 +194,15 @@ export const ProjectUniverse: React.FC = () => {
                       {tech}
                     </span>
                   ))}
-                  {project.techStack.length > 3 && (
+                  {project.techStack.length > 2 && (
                     <span className="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">
-                      +{project.techStack.length - 3}
+                      +{project.techStack.length - 2}
                     </span>
                   )}
                 </div>
 
                 {/* Impact Preview */}
-                <div className={`text-sm ${theme.color} font-medium`}>
+                <div className={`text-xs sm:text-sm ${theme.color} font-medium line-clamp-2`}>
                   {project.impact}
                 </div>
 
