@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Mail, Linkedin, Github, Calendar, MessageCircle, Send, Star } from 'lucide-react';
 
 export const ContactNebula: React.FC = () => {
-  const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -52,7 +51,8 @@ export const ContactNebula: React.FC = () => {
 
   const handleContactClick = (option: any) => {
     if (option.id === 'calendar') {
-      setSelectedContact('booking');
+      // Future: Implement calendar booking
+      alert('Calendar booking feature coming soon!');
     } else {
       window.open(option.link, '_blank');
     }

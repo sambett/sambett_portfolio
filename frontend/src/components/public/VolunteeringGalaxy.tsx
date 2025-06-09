@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Users, Clock, Heart, Globe } from 'lucide-react';
+import { Users, Heart, Globe } from 'lucide-react';
 
 interface Experience {
   id: string;
@@ -222,7 +222,7 @@ export const VolunteeringGalaxy: React.FC = () => {
             className="space-y-6"
             variants={itemVariants}
           >
-            {experiences.map((exp, index) => (
+            {experiences.map((exp) => (
               <motion.div
                 key={exp.id}
                 className={`relative p-6 rounded-2xl bg-gradient-to-br ${
