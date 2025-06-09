@@ -1,23 +1,38 @@
 {
-  "name": "selma-ai-portfolio",
+  "name": "selma-magical-portfolio",
   "version": "1.0.0",
-  "description": "AI Engineer Portfolio with Secure Admin Interface",
-  "author": "Selma Bettaieb",
-  "license": "MIT",
+  "description": "A magical, modular portfolio showcasing AI projects and global volunteering experiences",
   "scripts": {
-    "setup": "npm run install:all && npm run build:all",
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:dev\"",
+    "frontend:dev": "cd frontend && npm run dev",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "backend:start": "cd backend && npm start",
+    "build": "npm run frontend:build",
+    "start": "npm run backend:start",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "build:all": "cd frontend && npm run build && cd ../backend && npm run build",
-    "preview": "cd frontend && npm run preview",
-    "deploy:netlify": "npm run build && netlify deploy --prod",
-    "test": "cd frontend && npm test && cd ../backend && npm test",
-    "lint": "cd frontend && npm run lint && cd ../backend && npm run lint"
+    "clean": "rm -rf frontend/node_modules backend/node_modules node_modules frontend/dist",
+    "deploy": "npm run build && echo 'Deploy to Vercel: vercel --prod'"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sambett/portfolio.git"
+  },
+  "keywords": [
+    "portfolio",
+    "ai",
+    "react",
+    "typescript",
+    "framer-motion",
+    "tailwindcss",
+    "vercel"
+  ],
+  "author": "Selma Bettaieb <selma.bettaieb@example.com>",
+  "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
