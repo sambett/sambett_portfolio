@@ -23,6 +23,15 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
     { id: 'contact', component: ContactNebula, theme: 'ethereal' }
   ];
 
+  const handleSectionChange = (newSection: number) => {
+    if (isTransitioning || newSection === currentSection) return;
+    
+    setIsTransitioning(true);
+    setCurrentSection(newSection);
+    
+    setTimeout(() => setIsTransitioning(false), 800);
+  };
+
   useEffect(() => {
     // Complete loading after 3 seconds
     const timer = setTimeout(() => {
@@ -33,67 +42,27 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
   }, []);
 
   useEffect(() => {
-    const handleScroll = (e: WheelEvent) => {
-      e.preventDefault(); // Prevent default scroll behavior
-      
-      if (isTransitioning) return;
-
-      setIsTransitioning(true);
-      
-      if (e.deltaY > 0 && currentSection < sections.length - 1) {
-        setCurrentSection(prev => prev + 1);
-      } else if (e.deltaY < 0 && currentSection > 0) {
-        setCurrentSection(prev => prev - 1);
-      }
-
-      setTimeout(() => setIsTransitioning(false), 800);
-    };
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isTransitioning) return;
-
-      setIsTransitioning(true);
       
       if ((e.key === 'ArrowDown' || e.key === 'PageDown') && currentSection < sections.length - 1) {
-        setCurrentSection(prev => prev + 1);
+        handleSectionChange(currentSection + 1);
       } else if ((e.key === 'ArrowUp' || e.key === 'PageUp') && currentSection > 0) {
-        setCurrentSection(prev => prev - 1);
+        handleSectionChange(currentSection - 1);
       } else if (e.key >= '1' && e.key <= '4') {
         const targetSection = parseInt(e.key) - 1;
         if (targetSection >= 0 && targetSection < sections.length) {
-          setCurrentSection(targetSection);
+          handleSectionChange(targetSection);
         }
-      } else {
-        setIsTransitioning(false); // Don't block if key isn't used
-        return;
       }
-
-      setTimeout(() => setIsTransitioning(false), 800);
-    };
-
-    // Prevent all forms of scrolling
-    const preventScroll = (e: Event) => {
-      e.preventDefault();
     };
 
     if (!isLoading) {
-      // Add wheel event with preventDefault
-      window.addEventListener('wheel', handleScroll, { passive: false });
-      
-      // Add keyboard navigation
+      // Add keyboard navigation only
       window.addEventListener('keydown', handleKeyDown);
       
-      // Prevent touch scroll on mobile
-      document.addEventListener('touchmove', preventScroll, { passive: false });
-      
-      // Prevent other scroll methods
-      document.addEventListener('scroll', preventScroll, { passive: false });
-      
       return () => {
-        window.removeEventListener('wheel', handleScroll);
         window.removeEventListener('keydown', handleKeyDown);
-        document.removeEventListener('touchmove', preventScroll);
-        document.removeEventListener('scroll', preventScroll);
       };
     }
   }, [currentSection, isTransitioning, isLoading]);
@@ -121,7 +90,7 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
   const currentTheme = sections[currentSection]?.theme || 'cosmic';
 
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ height: '100vh', width: '100vw' }}>
+    <div className={`relative ${className}`} style={{ minHeight: '100vh' }}>
       {/* Dynamic Background */}
       <motion.div 
         className={`fixed inset-0 bg-gradient-to-br ${getThemeColors(currentTheme)}`}
@@ -157,7 +126,7 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
       <Navigation 
         currentSection={currentSection}
         totalSections={sections.length}
-        onSectionChange={setCurrentSection}
+        onSectionChange={handleSectionChange}
       />
 
       {/* Main Content */}
@@ -168,7 +137,7 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.2 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="relative z-10 min-h-screen flex items-center justify-center"
+          className="relative z-10 min-h-screen"
         >
           {CurrentComponent && <CurrentComponent />}
         </motion.div>
@@ -180,7 +149,7 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
           {sections.map((_, index) => (
             <motion.button
               key={index}
-              onClick={() => setCurrentSection(index)}
+              onClick={() => handleSectionChange(index)}
               className={`w-3 h-3 rounded-full border-2 border-white transition-all duration-300 ${
                 index === currentSection 
                   ? 'bg-white shadow-lg shadow-white/50' 

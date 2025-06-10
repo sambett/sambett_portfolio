@@ -50,7 +50,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-cyan-400 rounded-full p-0.5 shadow-lg">
               <div className="w-full h-full rounded-full overflow-hidden bg-black">
                 <img
-                  src="/profile.png"
+                  src="/photo.jpg"
                   alt="Selma Bettaieb"
                   className="w-full h-full object-cover rounded-full"
                   onError={(e) => {

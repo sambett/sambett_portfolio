@@ -6,10 +6,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    overflow: hidden !important; /* Disable all scrolling */
-    height: 100%;
-    position: fixed;
-    width: 100%;
+    overflow-x: hidden; /* Only prevent horizontal scrolling */
   }
   
   body {
@@ -20,22 +17,13 @@
     -moz-osx-font-smoothing: grayscale;
     background: #000;
     color: #fff;
-    overflow: hidden !important; /* Disable all scrolling */
-    height: 100%;
-    position: fixed;
-    width: 100%;
+    overflow-x: hidden; /* Only prevent horizontal scrolling */
     margin: 0;
     padding: 0;
   }
 
   * {
     box-sizing: border-box;
-  }
-  
-  /* Disable touch scrolling on mobile */
-  * {
-    touch-action: none;
-    -webkit-overflow-scrolling: auto;
   }
 }
 
