@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { Project, GlobalExperience, ContactForm, AdminStats, ApiResponse } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// Use relative URLs for Vite proxy instead of absolute localhost URLs
+const API_BASE = '';  // Empty string uses same origin (proxy)
+
+console.log('🔧 API Base URL:', API_BASE || 'relative (using Vite proxy)');
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -9,19 +12,42 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout
 });
 
-// Request interceptor for debugging
+// Request interceptor to add auth token
 api.interceptors.request.use((config) => {
-  console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
+  const token = localStorage.getItem('adminToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
   return config;
 });
 
 // Response interceptor for error handling
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`✅ API Success: ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
+    return response;
+  },
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+    if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
+      console.error('❌ Network Error! Check if backend is running and Vite proxy is working');
+      console.error('💡 Make sure backend is on port 3002: cd backend && npm run dev');
+    } else {
+      console.error('❌ API Error:', error.response?.status, error.response?.data || error.message);
+    }
+    
+    // If unauthorized, remove token and redirect to login
+    if (error.response?.status === 401) {
+      localStorage.removeItem('adminToken');
+      if (window.location.pathname.startsWith('/admin') && window.location.pathname !== '/admin/login') {
+        window.location.href = '/admin/login';
+      }
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -47,34 +73,26 @@ export const contactApi = {
 
 // Admin API endpoints
 export const adminApi = {
-  login: (password: string): Promise<ApiResponse<any>> =>
+  login: (password: string): Promise<{ success: boolean; message: string; token: string }> =>
     api.post('/admin/login', { password }).then(res => res.data),
   
-  logout: (): Promise<ApiResponse<any>> =>
+  logout: (): Promise<{ success: boolean; message: string }> =>
     api.post('/admin/logout').then(res => res.data),
   
-  checkAuth: (): Promise<{ authenticated: boolean; admin: any }> =>
+  checkAuth: (): Promise<{ authenticated: boolean; admin: { username: string } }> =>
     api.get('/admin/status').then(res => res.data),
   
   getProjects: (): Promise<{ projects: Project[] }> =>
     api.get('/api/admin/projects').then(res => res.data),
   
-  createProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<{ project: Project }> =>
+  createProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<{ success: boolean; project: Project }> =>
     api.post('/api/admin/projects', project).then(res => res.data),
   
-  updateProject: (id: string, project: Partial<Project>): Promise<{ project: Project }> =>
+  updateProject: (id: string, project: Partial<Project>): Promise<{ success: boolean; project: Project }> =>
     api.put(`/api/admin/projects/${id}`, project).then(res => res.data),
   
   deleteProject: (id: string): Promise<{ success: boolean }> =>
     api.delete(`/api/admin/projects/${id}`).then(res => res.data),
-  
-  uploadFile: (file: File): Promise<{ filename: string; url: string }> => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return api.post('/api/admin/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    }).then(res => res.data);
-  },
   
   getStats: (): Promise<{ stats: AdminStats }> =>
     api.get('/api/admin/stats').then(res => res.data),

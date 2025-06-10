@@ -14,7 +14,7 @@ import {
   Settings
 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
-import { api } from '../utils/api'
+import { adminApi } from '../utils/api'
 import type { Project } from '../types'
 
 export const AdminDashboard = () => {
@@ -27,12 +27,12 @@ export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('projects')
   const [stats, setStats] = useState({
     totalProjects: 0,
-    totalViews: 0,
-    totalMessages: 0,
-    publishedProjects: 0
+    publishedProjects: 0,
+    featuredProjects: 0,
+    totalExperiences: 0
   })
 
-  const categories = ['All', 'AI', 'Optimization', 'DevOps', 'Global Impact', 'Web Development']
+  const categories = ['All', 'AI', 'Optimization', 'DevOps', 'Global Impact', 'Web Development', 'Sustainability', 'Social']
 
   const tabs = [
     { id: 'projects', label: 'Projects', icon: BarChart3 },
@@ -53,10 +53,11 @@ export const AdminDashboard = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true)
-      const response = await api.get('/api/projects')
-      setProjects(response.data)
+      const response = await adminApi.getProjects()
+      setProjects(response.projects || [])
     } catch (error) {
       console.error('Error fetching projects:', error)
+      setProjects([])
     } finally {
       setLoading(false)
     }
@@ -64,13 +65,8 @@ export const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      // Mock stats for now - in real app, fetch from analytics API
-      setStats({
-        totalProjects: 15,
-        totalViews: 2847,
-        totalMessages: 23,
-        publishedProjects: 12
-      })
+      const response = await adminApi.getStats()
+      setStats(response.stats)
     } catch (error) {
       console.error('Error fetching stats:', error)
     }
@@ -88,7 +84,7 @@ export const AdminDashboard = () => {
       filtered = filtered.filter(project =>
         project.title.toLowerCase().includes(term) ||
         project.description.toLowerCase().includes(term) ||
-        project.technologies.some(tech => tech.toLowerCase().includes(term))
+        (project.techStack && project.techStack.some(tech => tech.toLowerCase().includes(term)))
       )
     }
 
@@ -98,10 +94,13 @@ export const AdminDashboard = () => {
   const deleteProject = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
       try {
-        await api.delete(`/api/projects/${id}`)
-        setProjects(projects.filter(p => p._id !== id))
+        await adminApi.deleteProject(id)
+        setProjects(projects.filter(p => p.id !== id))
+        // Show success message
+        alert('Project deleted successfully!')
       } catch (error) {
         console.error('Error deleting project:', error)
+        alert('Failed to delete project. Please try again.')
       }
     }
   }
@@ -125,8 +124,8 @@ export const AdminDashboard = () => {
             </p>
           )}
         </div>
-        <div className="p-3 bg-primary-100 rounded-lg">
-          <Icon size={24} className="text-primary-600" />
+        <div className="p-3 bg-blue-100 rounded-lg">
+          <Icon size={24} className="text-blue-600" />
         </div>
       </div>
     </motion.div>
@@ -143,26 +142,29 @@ export const AdminDashboard = () => {
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-xl font-bold text-slate-900 mb-2">{project.title}</h3>
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-700">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
             {project.category}
           </span>
         </div>
         <div className="flex space-x-2">
-          <button
-            onClick={() => window.open(project.liveUrl, '_blank')}
-            className="p-2 text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
-            title="View Live"
-          >
-            <Eye size={18} />
-          </button>
+          {project.githubUrl && (
+            <button
+              onClick={() => window.open(project.githubUrl, '_blank')}
+              className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              title="View on GitHub"
+            >
+              <Eye size={18} />
+            </button>
+          )}
           <button
             className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             title="Edit Project"
+            onClick={() => alert('Edit functionality coming soon!')}
           >
             <Edit size={18} />
           </button>
           <button
-            onClick={() => deleteProject(project._id)}
+            onClick={() => deleteProject(project.id)}
             className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             title="Delete Project"
           >
@@ -178,44 +180,47 @@ export const AdminDashboard = () => {
         }
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {project.technologies.slice(0, 3).map((tech) => (
-          <span
-            key={tech}
-            className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
-          >
-            {tech}
-          </span>
-        ))}
-        {project.technologies.length > 3 && (
-          <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
-            +{project.technologies.length - 3} more
-          </span>
-        )}
-      </div>
+      {project.techStack && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.techStack.slice(0, 3).map((tech) => (
+            <span
+              key={tech}
+              className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
+            >
+              {tech}
+            </span>
+          ))}
+          {project.techStack.length > 3 && (
+            <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
+              +{project.techStack.length - 3} more
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="flex items-center justify-between text-sm text-slate-500">
-        <span>{new Date(project.date).toLocaleDateString()}</span>
+        <span>{project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'No date'}</span>
         <div className="flex space-x-4">
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-primary-600 hover:text-primary-700"
-            >
-              <ExternalLink size={14} className="mr-1" />
-              Live
-            </a>
-          )}
           {project.githubUrl && (
             <a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-slate-600 hover:text-slate-700"
+              className="flex items-center text-blue-600 hover:text-blue-700"
             >
+              <ExternalLink size={14} className="mr-1" />
               GitHub
+            </a>
+          )}
+          {project.demoUrl && (
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-green-600 hover:text-green-700"
+            >
+              <ExternalLink size={14} className="mr-1" />
+              Demo
             </a>
           )}
         </div>
@@ -238,7 +243,8 @@ export const AdminDashboard = () => {
                 href="/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-600 hover:text-primary-600 transition-colors"
+                className="text-slate-600 hover:text-blue-600 transition-colors"
+                title="View Portfolio"
               >
                 <ExternalLink size={20} />
               </a>
@@ -266,7 +272,7 @@ export const AdminDashboard = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                     activeTab === tab.id
-                      ? 'border-primary-500 text-primary-600'
+                      ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                   }`}
                 >
@@ -289,25 +295,21 @@ export const AdminDashboard = () => {
                 icon={BarChart3}
                 label="Total Projects"
                 value={stats.totalProjects}
-                change={12}
               />
               <StatCard
                 icon={Eye}
-                label="Portfolio Views"
-                value={stats.totalViews.toLocaleString()}
-                change={8}
+                label="Published"
+                value={stats.publishedProjects}
               />
               <StatCard
                 icon={MessageSquare}
-                label="Messages"
-                value={stats.totalMessages}
-                change={15}
+                label="Featured"
+                value={stats.featuredProjects}
               />
               <StatCard
                 icon={Users}
-                label="Published"
-                value={stats.publishedProjects}
-                change={5}
+                label="Experiences"
+                value={stats.totalExperiences}
               />
             </div>
 
@@ -316,7 +318,10 @@ export const AdminDashboard = () => {
               <div className="p-6 border-b border-slate-200">
                 <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
                   <h2 className="text-xl font-bold text-slate-900">Manage Projects</h2>
-                  <button className="btn-primary inline-flex items-center">
+                  <button 
+                    className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    onClick={() => alert('Add project functionality coming soon!')}
+                  >
                     <Plus size={20} className="mr-2" />
                     Add New Project
                   </button>
@@ -331,7 +336,7 @@ export const AdminDashboard = () => {
                       placeholder="Search projects..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                   <div className="flex space-x-2 overflow-x-auto">
@@ -341,7 +346,7 @@ export const AdminDashboard = () => {
                         onClick={() => setSelectedCategory(category)}
                         className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                           selectedCategory === category
-                            ? 'bg-primary-500 text-white'
+                            ? 'bg-blue-500 text-white'
                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                         }`}
                       >
@@ -356,13 +361,13 @@ export const AdminDashboard = () => {
               <div className="p-6">
                 {loading ? (
                   <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                     <p className="mt-4 text-slate-600">Loading projects...</p>
                   </div>
                 ) : filteredProjects.length > 0 ? (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProjects.map((project) => (
-                      <ProjectCard key={project._id} project={project} />
+                      <ProjectCard key={project.id} project={project} />
                     ))}
                   </div>
                 ) : (
@@ -375,7 +380,10 @@ export const AdminDashboard = () => {
                         : 'Get started by adding your first project'
                       }
                     </p>
-                    <button className="btn-primary inline-flex items-center">
+                    <button 
+                      className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                      onClick={() => alert('Add project functionality coming soon!')}
+                    >
                       <Plus size={20} className="mr-2" />
                       Add New Project
                     </button>
