@@ -1,127 +1,175 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Users, Lightbulb, Book, Heart, Star } from 'lucide-react';
+import { 
+  MapPin, Calendar, Users, Target, ArrowRight, Globe, 
+  Lightbulb, Heart, Star, CheckCircle, Clock, 
+  GraduationCap, Code, Briefcase
+} from 'lucide-react';
 
-interface CulturalInsight {
+interface Experience {
+  id: string;
   country: string;
   flag: string;
-  language: string;
-  insight: string;
-  techApplication: string;
+  role: string;
+  description: string;
+  impact: string;
+  stats: string;
   projects: string[];
-  culturalValue: string;
-  aiPerspective: string;
-  position: { x: number; y: number };
-  color: string;
+  status: 'completed' | 'upcoming';
+  year: string;
 }
 
-interface Bridge {
-  from: string;
-  to: string;
-  connection: string;
-  strength: number;
+interface JourneyStep {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  keyLearning: string;
+  icon: React.ComponentType<any>;
+  color: string;
+  position: number;
 }
 
 export const CulturalBridge: React.FC = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const [hoveredInsight, setHoveredInsight] = useState<string | null>(null);
-  const [activeConnections, setActiveConnections] = useState<string[]>([]);
+  const [selectedExperience, setSelectedExperience] = useState<string | null>(null);
+  const [activeJourneyStep, setActiveJourneyStep] = useState<number>(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
 
-  const culturalInsights: CulturalInsight[] = [
+  useEffect(() => {
+    // Load experiences from JSON
+    fetch('/data/experiences.json')
+      .then(res => res.json())
+      .then(data => {
+        setExperiences(data.experiences);
+      })
+      .catch(() => {
+        // Fallback data
+        const fallbackExperiences: Experience[] = [
+          {
+            id: "tunisia",
+            country: "Tunisia",
+            flag: "🇹🇳",
+            role: "Home Base • Student Solutions",
+            description: "Building solutions for real challenges faced by Tunisian students: professor availability, housing, and academic communication.",
+            impact: "Growing up here taught me that the best technology solves everyday frustrations. DocConnect exists because I've waited outside professors' offices myself.",
+            stats: "200+ students served",
+            projects: ["docconnect", "student-housing"],
+            status: "completed",
+            year: "2018-2024"
+          },
+          {
+            id: "turkey",
+            country: "Turkey",
+            flag: "🇹🇷",
+            role: "AIESEC Volunteer • English Teacher",
+            description: "Taught English to 40+ students using creative methods and basic AI tools. Connected across language and cultural barriers.",
+            impact: "Discovered that technology amplifies human connection—it doesn't replace it. The best AI tools make teachers more effective, not obsolete.",
+            stats: "40+ students taught",
+            projects: [],
+            status: "completed",
+            year: "2023"
+          },
+          {
+            id: "morocco",
+            country: "Morocco",
+            flag: "🇲🇦",
+            role: "AIESEC Volunteer • Skills Trainer",
+            description: "Facilitated soft skills workshops focusing on communication and leadership. Experienced cultural exchange acceleration.",
+            impact: "Learned that the best solutions emerge when different perspectives meet. This experience shapes how I approach every AI project.",
+            stats: "Multiple workshops delivered",
+            projects: [],
+            status: "completed",
+            year: "2023"
+          },
+          {
+            id: "india",
+            country: "India",
+            flag: "🇮🇳",
+            role: "Upcoming • AI in Healthcare",
+            description: "Preparing to work on AI-powered healthcare solutions that improve access and outcomes in resource-constrained environments.",
+            impact: "Ready to apply global perspective and technical skills to healthcare challenges at scale. AI with purpose, impact, and cultural awareness.",
+            stats: "Planning phase",
+            projects: [],
+            status: "upcoming",
+            year: "2024"
+          }
+        ];
+        setExperiences(fallbackExperiences);
+      });
+  }, []);
+
+  const journeySteps: JourneyStep[] = [
     {
-      country: "Tunisia",
-      flag: "🇹🇳",
-      language: "Arabic/French",
-      insight: "Bridging tradition with innovation - seeing technology as a tool to preserve culture while enabling progress",
-      techApplication: "Built DocConnect considering local housing customs and family values in student accommodation",
-      projects: ["DocConnect", "Local AI Solutions"],
-      culturalValue: "Community-first approach to problem solving",
-      aiPerspective: "AI should enhance human connection, not replace it",
-      position: { x: 50, y: 60 },
-      color: "bg-red-500"
+      id: "foundation",
+      title: "Cultural Foundation",
+      subtitle: "Growing up with diverse perspectives",
+      description: "Born into a multicultural environment where different approaches to problem-solving coexist",
+      keyLearning: "Technology should serve human needs, not impose uniform solutions",
+      icon: Heart,
+      color: "from-red-500 to-pink-500",
+      position: 0
     },
     {
-      country: "Turkey",
-      flag: "🇹🇷", 
-      language: "Turkish/English",
-      insight: "Cross-cultural education reveals universal learning patterns while respecting individual cultural contexts",
-      techApplication: "Teaching English with AI-assisted language tools that adapt to cultural communication styles",
-      projects: ["AIESEC Education", "Language Learning AI"],
-      culturalValue: "Education as a bridge between cultures",
-      aiPerspective: "AI can break language barriers while preserving cultural nuances",
-      position: { x: 55, y: 35 },
-      color: "bg-red-600"
+      id: "education",
+      title: "Technical Education",
+      subtitle: "Building AI & engineering skills",
+      description: "Mastering technical foundations while maintaining focus on human-centered design",
+      keyLearning: "The best engineers understand both code and context",
+      icon: GraduationCap,
+      color: "from-blue-500 to-cyan-500",
+      position: 25
     },
     {
-      country: "Morocco",
-      flag: "🇲🇦",
-      language: "Arabic/French",
-      insight: "Traditional craftsmanship teaches patience and iterative improvement - principles that apply to AI development",
-      techApplication: "Applying artisan's attention to detail and user-centered design in AI solutions",
-      projects: ["User Experience Research", "Cultural AI Ethics"],
-      culturalValue: "Craftsmanship and attention to detail",
-      aiPerspective: "AI systems should be crafted with care, not just optimized for metrics",
-      position: { x: 48, y: 45 },
-      color: "bg-green-600"
+      id: "exploration",
+      title: "Global Exchange",
+      subtitle: "Teaching & learning across cultures",
+      description: "Volunteering in Turkey and Morocco, discovering universal human needs through local experiences",
+      keyLearning: "Empathy scales better than algorithms",
+      icon: Globe,
+      color: "from-emerald-500 to-teal-500",
+      position: 50
     },
     {
-      country: "France",
-      flag: "🇫🇷",
-      language: "French",
-      insight: "Academic rigor and philosophical thinking shape how we approach AI ethics and responsible innovation",
-      techApplication: "Structured thinking and ethical frameworks in AI system design and documentation",
-      projects: ["AI Ethics Research", "Technical Documentation"],
-      culturalValue: "Intellectual rigor and structured thinking",
-      aiPerspective: "AI development requires philosophical reflection, not just technical skill",
-      position: { x: 52, y: 40 },
-      color: "bg-blue-600"
+      id: "application",
+      title: "AI with Purpose",
+      subtitle: "Building solutions that matter",
+      description: "Creating technology that addresses real problems for real people in their cultural context",
+      keyLearning: "The most impactful AI solves problems you've personally experienced",
+      icon: Code,
+      color: "from-purple-500 to-indigo-500",
+      position: 75
     },
     {
-      country: "India",
-      flag: "🇮🇳",
-      language: "English/Hindi",
-      insight: "Upcoming experience in AI healthcare - anticipating how diverse cultural approaches to wellness can inform AI solutions",
-      techApplication: "Designing AI healthcare tools that respect cultural approaches to medicine and patient care",
-      projects: ["Upcoming Healthcare AI", "Cultural Sensitivity Research"],
-      culturalValue: "Holistic approach to problem-solving",
-      aiPerspective: "AI should understand and respect diverse cultural definitions of wellbeing",
-      position: { x: 70, y: 50 },
-      color: "bg-orange-600"
+      id: "future",
+      title: "Healthcare Impact",
+      subtitle: "Scaling empathy through technology",
+      description: "Applying cross-cultural insights to healthcare AI that respects diverse approaches to wellness",
+      keyLearning: "AI should amplify human wisdom, not replace human judgment",
+      icon: Briefcase,
+      color: "from-orange-500 to-red-500",
+      position: 100
     }
   ];
 
-  const culturalBridges: Bridge[] = [
-    {
-      from: "Tunisia",
-      to: "Turkey", 
-      connection: "Shared approach to technology-enhanced education",
-      strength: 9
-    },
-    {
-      from: "Morocco",
-      to: "Tunisia",
-      connection: "Arabic cultural values in tech design",
-      strength: 8
-    },
-    {
-      from: "France",
-      to: "Tunisia",
-      connection: "Bilingual perspective in AI development",
-      strength: 7
-    },
-    {
-      from: "Turkey",
-      to: "India",
-      connection: "Cross-cultural education methodologies",
-      strength: 6
-    },
-    {
-      from: "France",
-      to: "India",
-      connection: "Academic rigor meets practical application",
-      strength: 7
-    }
-  ];
+  // Auto-play through journey steps
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(() => {
+      setActiveJourneyStep((prev) => (prev + 1) % journeySteps.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, journeySteps.length]);
+
+  const getStatusIcon = (status: string) => {
+    return status === 'completed' ? CheckCircle : Clock;
+  };
+
+  const getStatusColor = (status: string) => {
+    return status === 'completed' ? 'text-emerald-400' : 'text-orange-400';
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -134,366 +182,288 @@ export const CulturalBridge: React.FC = () => {
     },
   };
 
-  const countryVariants = {
-    hidden: { opacity: 0, scale: 0.5 },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
-      scale: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
     },
   };
 
-  const handleCountryClick = (country: string) => {
-    setSelectedCountry(selectedCountry === country ? null : country);
-    
-    // Show connections for selected country
-    if (selectedCountry !== country) {
-      const connections = culturalBridges
-        .filter(bridge => bridge.from === country || bridge.to === country)
-        .map(bridge => `${bridge.from}-${bridge.to}`);
-      setActiveConnections(connections);
-    } else {
-      setActiveConnections([]);
-    }
-  };
-
-  const getBridgePoints = (from: string, to: string) => {
-    const fromCountry = culturalInsights.find(c => c.country === from);
-    const toCountry = culturalInsights.find(c => c.country === to);
-    
-    if (!fromCountry || !toCountry) return null;
-    
-    return {
-      from: fromCountry.position,
-      to: toCountry.position
-    };
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen px-4 py-12">
       <motion.div
         className="max-w-7xl mx-auto"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Section Header */}
+        {/* Header */}
         <motion.div
-          className="text-center mb-16 px-4"
-          variants={countryVariants}
+          className="text-center mb-16"
+          variants={itemVariants}
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
-              Cultural Bridge
+              Cultural Journey
             </span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            How my global journey across cultures shapes my approach to AI development. 
-            Each experience adds a unique lens to technology solutions.
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            How global experiences shape AI solutions that respect cultural diversity
           </p>
         </motion.div>
 
-        {/* World Map Visualization */}
+        {/* Journey Timeline */}
         <motion.div
-          className="relative w-full h-96 mb-12"
-          variants={countryVariants}
+          className="mb-16"
+          variants={itemVariants}
         >
-          {/* Background World Map Silhouette */}
-          <div className="absolute inset-0 opacity-10">
-            <svg
-              viewBox="0 0 1000 500"
-              className="w-full h-full"
-              fill="currentColor"
-            >
-              {/* Simplified world map paths */}
-              <path d="M200,200 Q250,180 300,200 L350,180 Q400,190 450,200 L500,190 Q550,200 600,210 L650,200 Q700,180 750,200" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    fill="none" 
-                    opacity="0.3" />
-              <path d="M150,250 Q200,230 250,250 L300,240 Q350,250 400,260 L450,250 Q500,260 550,270" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    fill="none" 
-                    opacity="0.3" />
-            </svg>
-          </div>
-
-          {/* Cultural Connection Lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none">
-            {culturalBridges.map((bridge, index) => {
-              const points = getBridgePoints(bridge.from, bridge.to);
-              if (!points) return null;
-              
-              const isActive = activeConnections.includes(`${bridge.from}-${bridge.to}`);
-              
-              return (
-                <motion.g key={`${bridge.from}-${bridge.to}`}>
-                  <motion.path
-                    d={`M${points.from.x * 10},${points.from.y * 4} Q${((points.from.x + points.to.x) / 2) * 10},${Math.min(points.from.y, points.to.y) * 4 - 50} ${points.to.x * 10},${points.to.y * 4}`}
-                    stroke={isActive ? "#06d6a0" : "rgba(255,255,255,0.2)"}
-                    strokeWidth={isActive ? "3" : "1"}
-                    fill="none"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ 
-                      pathLength: 1, 
-                      opacity: isActive ? 1 : 0.3,
-                      strokeWidth: isActive ? 3 : 1
-                    }}
-                    transition={{ duration: 1.5, delay: index * 0.2 }}
-                  />
-                  
-                  {/* Connection strength indicator */}
-                  {isActive && (
-                    <motion.circle
-                      cx={((points.from.x + points.to.x) / 2) * 10}
-                      cy={Math.min(points.from.y, points.to.y) * 4 - 50}
-                      r="4"
-                      fill="#06d6a0"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 1 }}
-                    >
-                      <motion.animate
-                        attributeName="r"
-                        values="4;8;4"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </motion.circle>
-                  )}
-                </motion.g>
-              );
-            })}
-          </svg>
-
-          {/* Country Points */}
-          {culturalInsights.map((insight, index) => (
-            <motion.div
-              key={insight.country}
-              className="absolute cursor-pointer group"
-              style={{
-                left: `${insight.position.x}%`,
-                top: `${insight.position.y}%`,
-                transform: 'translate(-50%, -50%)',
-              }}
-              variants={countryVariants}
-              onClick={() => handleCountryClick(insight.country)}
-              onHoverStart={() => setHoveredInsight(insight.country)}
-              onHoverEnd={() => setHoveredInsight(null)}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              {/* Country Flag Circle */}
-              <motion.div
-                className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl border-2 border-white/30 backdrop-blur-sm ${
-                  selectedCountry === insight.country ? 'ring-4 ring-cyan-400/50' : ''
+          <div className="relative">
+            {/* Timeline Background */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-400 to-cyan-400 rounded-full opacity-30" />
+            
+            {/* Auto-play Controls */}
+            <div className="flex justify-center mb-8">
+              <motion.button
+                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                className={`px-4 py-2 rounded-full border transition-all duration-300 ${
+                  isAutoPlaying 
+                    ? 'bg-emerald-500/20 border-emerald-400/30 text-emerald-400' 
+                    : 'bg-gray-500/20 border-gray-400/30 text-gray-400'
                 }`}
-                style={{
-                  background: selectedCountry === insight.country 
-                    ? 'radial-gradient(circle, rgba(6,214,160,0.3) 0%, rgba(6,214,160,0.1) 100%)'
-                    : 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)'
-                }}
-                animate={{
-                  boxShadow: selectedCountry === insight.country 
-                    ? ['0 0 0px rgba(6,214,160,0.4)', '0 0 20px rgba(6,214,160,0.4)', '0 0 0px rgba(6,214,160,0.4)']
-                    : ['0 0 0px rgba(255,255,255,0.2)', '0 0 8px rgba(255,255,255,0.2)', '0 0 0px rgba(255,255,255,0.2)']
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {insight.flag}
-              </motion.div>
+                {isAutoPlaying ? 'Pause Journey' : 'Play Journey'}
+              </motion.button>
+            </div>
 
-              {/* Country Label */}
-              <motion.div
-                className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-white font-medium whitespace-nowrap"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 + index * 0.1 }}
-              >
-                {insight.country}
-              </motion.div>
+            {/* Journey Steps */}
+            <div className="space-y-12">
+              {journeySteps.map((step, index) => {
+                const StepIcon = step.icon;
+                const isActive = activeJourneyStep === index;
+                
+                return (
+                  <motion.div
+                    key={step.id}
+                    className={`relative flex items-center ${
+                      index % 2 === 0 ? 'justify-start' : 'justify-end'
+                    }`}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.2 }}
+                  >
+                    {/* Timeline Node */}
+                    <motion.div
+                      className="absolute left-1/2 transform -translate-x-1/2 z-10"
+                      animate={{
+                        scale: isActive ? 1.3 : 1,
+                        boxShadow: isActive 
+                          ? '0 0 20px rgba(16, 185, 129, 0.6)' 
+                          : '0 0 0px rgba(16, 185, 129, 0)'
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${step.color} flex items-center justify-center border-4 border-gray-900`}>
+                        <StepIcon className="w-6 h-6 text-white" />
+                      </div>
+                    </motion.div>
 
-              {/* Pulse Effect */}
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-white/20"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.5, 0, 0.5],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  delay: index * 0.5,
-                }}
-              />
-            </motion.div>
-          ))}
+                    {/* Step Content */}
+                    <motion.div
+                      className={`w-1/2 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}
+                      animate={{
+                        scale: isActive ? 1.05 : 1,
+                        opacity: isActive ? 1 : 0.7
+                      }}
+                      transition={{ duration: 0.3 }}
+                      onClick={() => setActiveJourneyStep(index)}
+                    >
+                      <div className={`p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm cursor-pointer hover:bg-white/10 transition-all duration-300 ${
+                        isActive ? 'ring-2 ring-emerald-400/50' : ''
+                      }`}>
+                        <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
+                        <p className="text-emerald-300 text-sm mb-3">{step.subtitle}</p>
+                        <p className="text-gray-300 mb-4 leading-relaxed">{step.description}</p>
+                        
+                        <div className="flex items-start space-x-2">
+                          <Lightbulb className="w-4 h-4 text-yellow-400 mt-1 flex-shrink-0" />
+                          <p className="text-yellow-300 text-sm italic">{step.keyLearning}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
         </motion.div>
 
-        {/* Selected Country Detail */}
-        <AnimatePresence mode="wait">
-          {selectedCountry && (
-            <motion.div
-              className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-sm mb-8"
-              initial={{ opacity: 0, y: 50, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -50, scale: 0.9 }}
-              transition={{ duration: 0.5 }}
-            >
-              {(() => {
-                const insight = culturalInsights.find(c => c.country === selectedCountry);
-                if (!insight) return null;
-
-                return (
-                  <div className="space-y-6">
-                    {/* Header */}
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div className="text-4xl">{insight.flag}</div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-white">{insight.country}</h3>
-                        <p className="text-cyan-300">{insight.language}</p>
-                      </div>
+        {/* Experience Cards Grid */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16"
+          variants={itemVariants}
+        >
+          {experiences.map((exp, index) => {
+            const StatusIcon = getStatusIcon(exp.status);
+            const isSelected = selectedExperience === exp.id;
+            
+            return (
+              <motion.div
+                key={exp.id}
+                className={`relative p-6 rounded-2xl bg-white/5 border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:bg-white/10 ${
+                  isSelected 
+                    ? 'border-cyan-400/50 ring-2 ring-cyan-400/30 bg-white/10' 
+                    : 'border-white/10 hover:border-white/20'
+                }`}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => setSelectedExperience(isSelected ? null : exp.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-3xl">{exp.flag}</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">{exp.country}</h3>
+                      <p className="text-cyan-300 text-sm">{exp.year}</p>
                     </div>
-
-                    {/* Insights Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Cultural Insight */}
-                      <motion.div 
-                        className="space-y-3"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        <div className="flex items-center space-x-2 text-emerald-400">
-                          <Heart className="w-5 h-5" />
-                          <span className="font-semibold">Cultural Insight</span>
-                        </div>
-                        <p className="text-gray-300 leading-relaxed">{insight.insight}</p>
-                      </motion.div>
-
-                      {/* AI Perspective */}
-                      <motion.div 
-                        className="space-y-3"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 }}
-                      >
-                        <div className="flex items-center space-x-2 text-purple-400">
-                          <Lightbulb className="w-5 h-5" />
-                          <span className="font-semibold">AI Perspective</span>
-                        </div>
-                        <p className="text-gray-300 leading-relaxed">{insight.aiPerspective}</p>
-                      </motion.div>
-
-                      {/* Tech Application */}
-                      <motion.div 
-                        className="space-y-3"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 }}
-                      >
-                        <div className="flex items-center space-x-2 text-cyan-400">
-                          <Globe className="w-5 h-5" />
-                          <span className="font-semibold">Tech Application</span>
-                        </div>
-                        <p className="text-gray-300 leading-relaxed">{insight.techApplication}</p>
-                      </motion.div>
-
-                      {/* Projects */}
-                      <motion.div 
-                        className="space-y-3"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 }}
-                      >
-                        <div className="flex items-center space-x-2 text-yellow-400">
-                          <Star className="w-5 h-5" />
-                          <span className="font-semibold">Related Projects</span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {insight.projects.map((project, index) => (
-                            <span
-                              key={index}
-                              className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm border border-yellow-400/30"
-                            >
-                              {project}
-                            </span>
-                          ))}
-                        </div>
-                      </motion.div>
-                    </div>
-
-                    {/* Active Connections */}
-                    {activeConnections.length > 0 && (
-                      <motion.div
-                        className="pt-6 border-t border-white/10"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                      >
-                        <div className="flex items-center space-x-2 text-emerald-400 mb-3">
-                          <Users className="w-5 h-5" />
-                          <span className="font-semibold">Cultural Connections</span>
-                        </div>
-                        <div className="space-y-2">
-                          {culturalBridges
-                            .filter(bridge => bridge.from === selectedCountry || bridge.to === selectedCountry)
-                            .map((bridge, index) => (
-                              <div
-                                key={index}
-                                className="text-sm text-gray-300 bg-white/5 rounded-lg p-3 border border-white/10"
-                              >
-                                <div className="font-medium text-white mb-1">
-                                  {bridge.from === selectedCountry ? `→ ${bridge.to}` : `← ${bridge.from}`}
-                                </div>
-                                <div>{bridge.connection}</div>
-                                <div className="flex items-center mt-2">
-                                  <span className="text-xs text-gray-400 mr-2">Strength:</span>
-                                  <div className="flex space-x-1">
-                                    {[...Array(10)].map((_, i) => (
-                                      <div
-                                        key={i}
-                                        className={`w-2 h-1 rounded-full ${
-                                          i < bridge.strength ? 'bg-emerald-400' : 'bg-gray-600'
-                                        }`}
-                                      />
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      </motion.div>
-                    )}
                   </div>
-                );
-              })()}
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  
+                  <div className="flex items-center space-x-2">
+                    <StatusIcon className={`w-5 h-5 ${getStatusColor(exp.status)}`} />
+                    <span className={`text-sm capitalize ${getStatusColor(exp.status)}`}>
+                      {exp.status}
+                    </span>
+                  </div>
+                </div>
 
-        {/* Core Philosophy */}
+                {/* Role */}
+                <div className="mb-4">
+                  <div className="flex items-center space-x-2 text-emerald-400 mb-2">
+                    <Briefcase className="w-4 h-4" />
+                    <span className="font-semibold text-sm">{exp.role}</span>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-300 mb-4 leading-relaxed">{exp.description}</p>
+
+                {/* Stats */}
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex items-center space-x-2 text-yellow-400">
+                    <Target className="w-4 h-4" />
+                    <span className="text-sm">{exp.stats}</span>
+                  </div>
+                  {exp.projects.length > 0 && (
+                    <div className="flex items-center space-x-2 text-purple-400">
+                      <Code className="w-4 h-4" />
+                      <span className="text-sm">{exp.projects.length} project{exp.projects.length !== 1 ? 's' : ''}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Expand Indicator */}
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-gray-400">
+                    Click to {isSelected ? 'collapse' : 'learn more'}
+                  </div>
+                  <motion.div
+                    animate={{ rotate: isSelected ? 90 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                  </motion.div>
+                </div>
+
+                {/* Expanded Content */}
+                <AnimatePresence>
+                  {isSelected && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-6 pt-6 border-t border-white/10"
+                    >
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex items-center space-x-2 text-cyan-400 mb-2">
+                            <Heart className="w-4 h-4" />
+                            <span className="font-semibold text-sm">Cultural Impact</span>
+                          </div>
+                          <p className="text-gray-300 text-sm leading-relaxed bg-white/5 p-3 rounded-lg">
+                            {exp.impact}
+                          </p>
+                        </div>
+
+                        {exp.projects.length > 0 && (
+                          <div>
+                            <div className="flex items-center space-x-2 text-purple-400 mb-2">
+                              <Star className="w-4 h-4" />
+                              <span className="font-semibold text-sm">Related Projects</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {exp.projects.map((project, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs border border-purple-400/30"
+                                >
+                                  {project}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Philosophy Statement */}
         <motion.div
           className="text-center bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-emerald-500/10 rounded-3xl p-8 border border-white/10"
-          variants={countryVariants}
+          variants={itemVariants}
         >
-          <Book className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-white mb-4">Cross-Cultural AI Philosophy</h3>
-          <p className="text-gray-300 leading-relaxed max-w-3xl mx-auto">
-            My approach to AI development is shaped by the understanding that technology is never culturally neutral. 
-            Each cultural experience has taught me that the best AI solutions emerge when we combine diverse perspectives, 
-            respect cultural contexts, and design with empathy for different ways of thinking and problem-solving.
+          <Globe className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-white mb-4">Global Perspective, Local Impact</h3>
+          <p className="text-gray-300 leading-relaxed max-w-4xl mx-auto text-lg">
+            Every culture I've experienced has taught me that the best technology emerges when we combine 
+            diverse perspectives with deep empathy. My AI solutions don't just work globally—they respect 
+            and enhance the unique ways different communities solve problems.
           </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-emerald-400 mb-2">4</div>
+              <div className="text-gray-300">Countries Experienced</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-cyan-400 mb-2">200+</div>
+              <div className="text-gray-300">Lives Impacted</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-400 mb-2">∞</div>
+              <div className="text-gray-300">Perspectives Gained</div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Interaction Hint */}
         <motion.div
           className="text-center mt-8 text-gray-400 text-sm"
-          variants={countryVariants}
+          variants={itemVariants}
         >
-          <p>Click on any country to explore cultural insights • Hover to see connections</p>
+          <p>Click experience cards to dive deeper • Journey auto-plays or click to navigate</p>
         </motion.div>
       </motion.div>
     </div>
