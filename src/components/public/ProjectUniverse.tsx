@@ -450,37 +450,64 @@ export const ProjectUniverse: React.FC = () => {
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
               >
-                {/* Enhanced Multi-layered Cosmic Background */}
+                {/* Enhanced Multi-layered Cosmic Background - Dynamically Themed */}
                 <div className="absolute inset-0">
-                  {/* Base cosmic gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-black" />
+                  {/* Base cosmic gradient with category theme */}
+                  <motion.div 
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(135deg, 
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-900')} 0%, 
+                        #000000 40%, 
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-800')} 100%)`
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1 }}
+                  />
                   
                   {/* Project-themed gradient overlay */}
-                  <div 
-                    className="absolute inset-0 opacity-8"
+                  <motion.div 
+                    className="absolute inset-0"
                     style={{
-                      background: `radial-gradient(circle at 30% 40%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 50%), radial-gradient(circle at 70% 60%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 0%, transparent 50%)`
+                      background: `
+                        radial-gradient(circle at 30% 40%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 50%), 
+                        radial-gradient(circle at 70% 60%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-700')} 0%, transparent 80%)
+                      `,
+                      opacity: 0.15
+                    }}
+                    animate={{
+                      opacity: [0.1, 0.2, 0.1],
+                    }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      ease: "easeInOut",
                     }}
                   />
                   
-                  {/* Twinkling stars */}
+                  {/* Themed twinkling stars */}
                   <div className="absolute inset-0">
                     {[...Array(100)].map((_, i) => (
                       <motion.div
                         key={i}
-                        className="absolute bg-white rounded-full"
+                        className="absolute rounded-full"
                         style={{
-                          width: Math.random() * 2 + 1 + 'px',
-                          height: Math.random() * 2 + 1 + 'px',
+                          width: Math.random() * 3 + 1 + 'px',
+                          height: Math.random() * 3 + 1 + 'px',
                           left: `${Math.random() * 100}%`,
                           top: `${Math.random() * 100}%`,
+                          background: Math.random() > 0.7 
+                            ? getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')
+                            : '#ffffff'
                         }}
                         animate={{
                           opacity: [0.2, 1, 0.2],
-                          scale: [0.5, 1.2, 0.5],
+                          scale: [0.5, 1.5, 0.5],
                         }}
                         transition={{
-                          duration: Math.random() * 3 + 2,
+                          duration: Math.random() * 4 + 2,
                           repeat: Infinity,
                           delay: Math.random() * 5,
                           ease: "easeInOut",
@@ -489,41 +516,87 @@ export const ProjectUniverse: React.FC = () => {
                     ))}
                   </div>
                   
-                  {/* Floating cosmic dust */}
+                  {/* Floating cosmic dust in category theme */}
                   <div className="absolute inset-0">
-                    {[...Array(30)].map((_, i) => (
+                    {[...Array(40)].map((_, i) => (
                       <motion.div
                         key={i}
-                        className={`absolute w-1 h-1 rounded-full ${getCategoryTheme(selectedProject.category).color.replace('text-', 'bg-')}`}
+                        className="absolute w-1 h-1 rounded-full"
+                        style={{
+                          background: getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300'),
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
                         animate={{
-                          x: [0, Math.random() * 200 - 100],
-                          y: [0, Math.random() * 200 - 100],
-                          opacity: [0, 0.6, 0],
-                          scale: [0, 1, 0],
+                          x: [0, Math.random() * 300 - 150],
+                          y: [0, Math.random() * 300 - 150],
+                          opacity: [0, 0.8, 0],
+                          scale: [0, 1.5, 0],
                         }}
                         transition={{
-                          duration: Math.random() * 8 + 5,
+                          duration: Math.random() * 10 + 6,
                           repeat: Infinity,
                           delay: Math.random() * 3,
                           ease: "easeInOut",
-                        }}
-                        style={{
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
                         }}
                       />
                     ))}
                   </div>
                   
-                  {/* Animated nebula clouds */}
+                  {/* Animated themed nebula clouds */}
                   <motion.div
                     className="absolute inset-0"
                     style={{
-                      background: `radial-gradient(ellipse at 25% 30%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 40%), radial-gradient(ellipse at 75% 70%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 50%)`
+                      background: `
+                        radial-gradient(ellipse 800px 400px at 25% 30%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 50%), 
+                        radial-gradient(ellipse 600px 300px at 75% 70%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 60%),
+                        radial-gradient(ellipse 400px 600px at 10% 80%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 0%, transparent 70%)
+                      `,
+                      opacity: 0.08
                     }}
                     animate={{
                       opacity: [0.05, 0.15, 0.05],
                       scale: [1, 1.1, 1],
+                      rotate: [0, 360],
+                    }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  
+                  {/* Category-themed rotating galaxy arms */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{
+                      background: `conic-gradient(
+                        from 0deg, 
+                        transparent 0deg, 
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 45deg, 
+                        transparent 90deg, 
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 180deg,
+                        transparent 225deg,
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 270deg,
+                        transparent 315deg
+                      )`,
+                      maskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
+                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
+                      opacity: 0.15
+                    }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                  />
+                  
+                  {/* Pulsing central glow with category theme */}
+                  <motion.div
+                    className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+                    style={{
+                      background: `radial-gradient(circle, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 30%, transparent 70%)`
+                    }}
+                    animate={{
+                      scale: [0.6, 1.4, 0.6],
+                      opacity: [0.1, 0.4, 0.1],
                     }}
                     transition={{
                       duration: 12,
@@ -531,35 +604,48 @@ export const ProjectUniverse: React.FC = () => {
                       ease: "easeInOut",
                     }}
                   />
-                  
-                  {/* Subtle rotating galaxy arms */}
-                  <motion.div
-                    className="absolute inset-0 opacity-10"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                    style={{
-                      background: `conic-gradient(from 0deg, transparent 0deg, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 45deg, transparent 90deg, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 225deg, transparent 270deg)`,
-                      maskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
-                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
-                    }}
-                  />
-                  
-                  {/* Pulsing central glow */}
-                  <motion.div
-                    className="absolute top-1/2 left-1/2 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-                    style={{
-                      background: `radial-gradient(circle, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 70%)`
-                    }}
-                    animate={{
-                      scale: [0.8, 1.2, 0.8],
-                      opacity: [0.1, 0.3, 0.1],
-                    }}
-                    transition={{
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
+
+                  {/* Category-specific decorative elements */}
+                  {selectedProject.category.toLowerCase() === 'ai' && (
+                    <motion.div
+                      className="absolute inset-0 opacity-20"
+                      style={{
+                        background: `repeating-linear-gradient(
+                          45deg,
+                          transparent,
+                          transparent 50px,
+                          ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 50px,
+                          ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 51px
+                        )`
+                      }}
+                      animate={{ x: [0, 100], opacity: [0.1, 0.3, 0.1] }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    />
+                  )}
+
+                  {selectedProject.category.toLowerCase() === 'optimization' && (
+                    <motion.div className="absolute inset-0">
+                      {[...Array(10)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-px bg-gradient-to-b from-transparent via-green-400 to-transparent"
+                          style={{
+                            left: `${10 + i * 10}%`,
+                            height: '100%',
+                          }}
+                          animate={{
+                            opacity: [0, 0.6, 0],
+                            scaleY: [0, 1, 0],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            delay: i * 0.3,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Project Detail Content */}

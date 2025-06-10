@@ -193,79 +193,253 @@ export const CulturalBridge: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* World Map Visualization */}
+        {/* 3D Cultural Bridge Visualization */}
         <motion.div
-          className="relative w-full h-96 mb-12"
+          className="relative w-full h-[600px] mb-12 perspective-1000"
           variants={countryVariants}
         >
-          {/* Background World Map Silhouette */}
-          <div className="absolute inset-0 opacity-10">
-            <svg
-              viewBox="0 0 1000 500"
-              className="w-full h-full"
-              fill="currentColor"
-            >
-              {/* Simplified world map paths */}
-              <path d="M200,200 Q250,180 300,200 L350,180 Q400,190 450,200 L500,190 Q550,200 600,210 L650,200 Q700,180 750,200" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    fill="none" 
-                    opacity="0.3" />
-              <path d="M150,250 Q200,230 250,250 L300,240 Q350,250 400,260 L450,250 Q500,260 550,270" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    fill="none" 
-                    opacity="0.3" />
-            </svg>
-          </div>
-
-          {/* Cultural Connection Lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none">
-            {culturalBridges.map((bridge, index) => {
-              const points = getBridgePoints(bridge.from, bridge.to);
-              if (!points) return null;
+          {/* 3D Scene Container */}
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-transparent to-gray-900/50 rounded-3xl overflow-hidden">
+            
+            {/* 3D Bridge Structure */}
+            <div className="absolute inset-0 flex items-center justify-center">
               
-              const isActive = activeConnections.includes(`${bridge.from}-${bridge.to}`);
-              
-              return (
-                <motion.g key={`${bridge.from}-${bridge.to}`}>
-                  <motion.path
-                    d={`M${points.from.x * 10},${points.from.y * 4} Q${((points.from.x + points.to.x) / 2) * 10},${Math.min(points.from.y, points.to.y) * 4 - 50} ${points.to.x * 10},${points.to.y * 4}`}
-                    stroke={isActive ? "#06d6a0" : "rgba(255,255,255,0.2)"}
-                    strokeWidth={isActive ? "3" : "1"}
-                    fill="none"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ 
-                      pathLength: 1, 
-                      opacity: isActive ? 1 : 0.3,
-                      strokeWidth: isActive ? 3 : 1
-                    }}
-                    transition={{ duration: 1.5, delay: index * 0.2 }}
-                  />
+              {/* Main Bridge Platform */}
+              <motion.div
+                className="relative w-full max-w-4xl h-32"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: 'rotateX(15deg) rotateY(-5deg)',
+                }}
+                animate={{
+                  rotateY: [-5, 5, -5],
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                {/* Bridge Base */}
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-teal-500/30 to-cyan-500/20 rounded-xl border border-white/20 backdrop-blur-sm transform-gpu">
+                  {/* Bridge Support Pillars */}
+                  {[0, 25, 50, 75, 100].map((position, index) => (
+                    <motion.div
+                      key={index}
+                      className="absolute bottom-0 w-2 bg-gradient-to-t from-white/30 to-white/10 rounded-t"
+                      style={{
+                        left: `${position}%`,
+                        height: `${60 + Math.sin(index) * 20}px`,
+                        transform: 'translateZ(10px)',
+                      }}
+                      animate={{
+                        scaleY: [1, 1.1, 1],
+                        opacity: [0.3, 0.6, 0.3],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: index * 0.5,
+                      }}
+                    />
+                  ))}
                   
-                  {/* Connection strength indicator */}
-                  {isActive && (
-                    <motion.circle
-                      cx={((points.from.x + points.to.x) / 2) * 10}
-                      cy={Math.min(points.from.y, points.to.y) * 4 - 50}
-                      r="4"
-                      fill="#06d6a0"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 1 }}
-                    >
-                      <motion.animate
-                        attributeName="r"
-                        values="4;8;4"
-                        dur="2s"
-                        repeatCount="indefinite"
+                  {/* Bridge Cables */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                    {[20, 40, 60, 80].map((x, index) => (
+                      <motion.path
+                        key={index}
+                        d={`M ${x}% 20% Q ${x + 10}% 10% ${x + 20}% 20%`}
+                        stroke="rgba(255,255,255,0.4)"
+                        strokeWidth="1"
+                        fill="none"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 2, delay: index * 0.3 }}
                       />
-                    </motion.circle>
-                  )}
-                </motion.g>
+                    ))}
+                  </svg>
+                </div>
+
+                {/* Bridge Walkway with 3D effect */}
+                <div 
+                  className="absolute top-4 left-4 right-4 h-4 bg-gradient-to-r from-emerald-400/40 via-teal-400/50 to-cyan-400/40 rounded-lg border border-white/30"
+                  style={{
+                    transform: 'translateZ(15px)',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                  }}
+                />
+              </motion.div>
+            </div>
+
+            {/* 3D Country Nodes positioned around the bridge */}
+            {culturalInsights.map((insight, index) => {
+              // Calculate 3D positions for a more dynamic layout
+              const angle = (index * (360 / culturalInsights.length)) * (Math.PI / 180);
+              const radius = 250;
+              const x = 50 + (Math.cos(angle) * radius) / 8; // Convert to percentage
+              const y = 50 + (Math.sin(angle) * radius) / 12; // Convert to percentage
+              const z = Math.sin(angle * 2) * 20; // Z-depth variation
+
+              return (
+                <motion.div
+                  key={insight.country}
+                  className="absolute cursor-pointer group"
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    transform: `translate(-50%, -50%) translateZ(${z}px)`,
+                    transformStyle: 'preserve-3d',
+                  }}
+                  onClick={() => handleCountryClick(insight.country)}
+                  onHoverStart={() => setHoveredInsight(insight.country)}
+                  onHoverEnd={() => setHoveredInsight(null)}
+                  whileHover={{ 
+                    scale: 1.3,
+                    rotateY: 15,
+                    z: z + 30,
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0, rotateX: -90 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    rotateX: 0,
+                    y: [0, -5, 0],
+                  }}
+                  transition={{ 
+                    delay: index * 0.2,
+                    y: {
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.5,
+                    }
+                  }}
+                >
+                  {/* 3D Country Platform */}
+                  <div 
+                    className="relative w-16 h-16 rounded-xl bg-gradient-to-br from-white/20 to-white/5 border border-white/30 backdrop-blur-md shadow-2xl"
+                    style={{
+                      background: selectedCountry === insight.country 
+                        ? 'linear-gradient(135deg, rgba(6,214,160,0.3) 0%, rgba(6,214,160,0.1) 100%)'
+                        : 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%)',
+                      transform: 'rotateX(10deg)',
+                      boxShadow: selectedCountry === insight.country 
+                        ? '0 20px 40px rgba(6,214,160,0.3), 0 0 20px rgba(6,214,160,0.5)'
+                        : '0 20px 40px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    {/* Flag with 3D effect */}
+                    <div 
+                      className="absolute inset-2 rounded-lg flex items-center justify-center text-2xl"
+                      style={{
+                        transform: 'translateZ(5px)',
+                        textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                      }}
+                    >
+                      {insight.flag}
+                    </div>
+                    
+                    {/* Country label with 3D positioning */}
+                    <div 
+                      className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-white font-medium whitespace-nowrap"
+                      style={{
+                        transform: 'translateZ(10px) translateX(-50%)',
+                        textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                      }}
+                    >
+                      {insight.country}
+                    </div>
+
+                    {/* 3D Connection indicator when selected */}
+                    {selectedCountry === insight.country && (
+                      <motion.div
+                        className="absolute inset-0 rounded-xl border-2 border-emerald-400"
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.8, 0.4, 0.8],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                        }}
+                        style={{
+                          transform: 'translateZ(8px)',
+                          boxShadow: '0 0 20px rgba(6,214,160,0.6)',
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  {/* 3D Bridge Connection Lines */}
+                  {selectedCountry === insight.country && culturalBridges
+                    .filter(bridge => bridge.from === insight.country || bridge.to === insight.country)
+                    .map((bridge, bridgeIndex) => {
+                      const otherCountry = bridge.from === insight.country ? bridge.to : bridge.from;
+                      const otherInsight = culturalInsights.find(c => c.country === otherCountry);
+                      if (!otherInsight) return null;
+
+                      const otherIndex = culturalInsights.indexOf(otherInsight);
+                      const otherAngle = (otherIndex * (360 / culturalInsights.length)) * (Math.PI / 180);
+                      const otherX = 50 + (Math.cos(otherAngle) * radius) / 8;
+                      const otherY = 50 + (Math.sin(otherAngle) * radius) / 12;
+
+                      return (
+                        <motion.div
+                          key={bridgeIndex}
+                          className="absolute pointer-events-none"
+                          style={{
+                            left: 0,
+                            top: 0,
+                            width: `${Math.abs(otherX - x)}%`,
+                            height: `${Math.abs(otherY - y)}%`,
+                            transform: 'translateZ(25px)',
+                          }}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.5 }}
+                        >
+                          <div 
+                            className="w-full h-0.5 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full"
+                            style={{
+                              transformOrigin: '0 50%',
+                              transform: `rotate(${Math.atan2(otherY - y, otherX - x) * (180 / Math.PI)}deg)`,
+                              boxShadow: '0 0 10px rgba(6,214,160,0.8)',
+                            }}
+                          />
+                        </motion.div>
+                      );
+                    })}
+                </motion.div>
               );
             })}
-          </svg>
+
+            {/* 3D Floating Particles for atmosphere */}
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(30)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-white/40 rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    transform: `translateZ(${Math.random() * 50}px)`,
+                  }}
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0.2, 0.8, 0.2],
+                    scale: [0.5, 1, 0.5],
+                  }}
+                  transition={{
+                    duration: Math.random() * 4 + 3,
+                    repeat: Infinity,
+                    delay: Math.random() * 3,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
 
           {/* Country Points */}
           {culturalInsights.map((insight, index) => (
