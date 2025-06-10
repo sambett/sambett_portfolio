@@ -118,6 +118,21 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </motion.div>
 
+      {/* Help Text - Keyboard Navigation Hint */}
+      <motion.div
+        className="fixed top-24 left-6 z-40 hidden lg:block"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3, duration: 1 }}
+      >
+        <div className="bg-black/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/10">
+          <div className="text-gray-300 text-xs space-y-1">
+            <div>Use ← → keys to navigate</div>
+            <div className="text-gray-500">or click arrows & buttons</div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Floating Action Buttons - Quick Actions */}
       <motion.div
         className="fixed bottom-6 left-6 z-40 space-y-3"

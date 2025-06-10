@@ -163,35 +163,19 @@ export const IdentityCard: React.FC = () => {
           ))}
         </motion.div>
 
-        {/* Impact Badge - Moved from mission statement */}
+        {/* Impact Badge - Repositioned for better spacing */}
         <motion.div
-          className="absolute bottom-20 left-1/2 transform -translate-x-1/2"
+          className="mt-8"
           variants={itemVariants}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2 }}
         >
-          <div className="bg-gradient-to-r from-purple-600/20 to-cyan-600/20 backdrop-blur-sm border border-purple-400/30 rounded-full px-4 py-2">
+          <div className="bg-gradient-to-r from-purple-600/20 to-cyan-600/20 backdrop-blur-sm border border-purple-400/30 rounded-full px-4 py-2 mx-auto w-fit">
             <div className="text-purple-300 text-sm font-medium flex items-center space-x-2">
               <Heart className="w-4 h-4" />
               <span>200+ student lives impacted</span>
             </div>
-          </div>
-        </motion.div>
-
-        {/* Enhanced Scroll Hint */}
-        <motion.div
-          className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <div className="text-gray-400 text-xs mb-2 opacity-75">scroll to explore</div>
-          <div className="w-6 h-10 mx-auto border-2 border-gray-400/60 rounded-full relative overflow-hidden">
-            <motion.div
-              className="w-1 h-2 bg-gradient-to-b from-purple-400 to-cyan-400 rounded-full mx-auto mt-2 absolute left-1/2 transform -translate-x-1/2"
-              animate={{ y: [8, 20, 8] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
           </div>
         </motion.div>
       </div>
