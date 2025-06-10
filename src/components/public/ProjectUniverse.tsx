@@ -1,7 +1,7 @@
 // Fixed TypeScript build issue - removed unused variables
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Award, Users, Brain, Leaf } from 'lucide-react';
+import { ExternalLink, Github, Award, Users, Brain, Leaf, Search, Filter, X } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -18,17 +18,25 @@ interface Project {
 
 export const ProjectUniverse: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedTech, setSelectedTech] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     // Load projects from JSON
     fetch('/data/projects.json')
       .then(res => res.json())
-      .then(data => setProjects(data.projects))
+      .then(data => {
+        setProjects(data.projects);
+        setFilteredProjects(data.projects);
+      })
       .catch(() => {
         // Fallback data
-        setProjects([
+        const fallbackProjects = [
           {
             id: "neurorag",
             title: "NeuroRAG",
@@ -39,9 +47,56 @@ export const ProjectUniverse: React.FC = () => {
             awards: ["🏆 Hackathon Winner"],
             featured: true
           }
-        ]);
+        ];
+        setProjects(fallbackProjects);
+        setFilteredProjects(fallbackProjects);
       });
   }, []);
+
+  // Filter projects based on search term, category, and technology
+  useEffect(() => {
+    let filtered = projects;
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(project =>
+        project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.techStack.some(tech => tech.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    // Category filter
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(project => project.category.toLowerCase() === selectedCategory.toLowerCase());
+    }
+
+    // Technology filter
+    if (selectedTech !== 'all') {
+      filtered = filtered.filter(project =>
+        project.techStack.some(tech => tech.toLowerCase().includes(selectedTech.toLowerCase()))
+      );
+    }
+
+    setFilteredProjects(filtered);
+  }, [projects, searchTerm, selectedCategory, selectedTech]);
+
+  // Get unique categories and technologies from projects
+  const getUniqueCategories = () => {
+    const categories = projects.map(p => p.category);
+    return [...new Set(categories)];
+  };
+
+  const getUniqueTechnologies = () => {
+    const techs = projects.flatMap(p => p.techStack);
+    return [...new Set(techs)].sort();
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('all');
+    setSelectedTech('all');
+  };
 
   const getCategoryTheme = (category: string) => {
     switch (category.toLowerCase()) {
@@ -130,7 +185,7 @@ export const ProjectUniverse: React.FC = () => {
       >
         {/* Section Header */}
         <motion.div
-          className="text-center mb-12 sm:mb-16 px-4"
+          className="text-center mb-8 sm:mb-12 px-4"
           variants={cardVariants}
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
@@ -144,12 +199,160 @@ export const ProjectUniverse: React.FC = () => {
           </p>
         </motion.div>
 
+        {/* Search and Filter Controls */}
+        <motion.div
+          className="mb-8 px-4"
+          variants={cardVariants}
+        >
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-6">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search projects by name, description, or technology..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 backdrop-blur-sm focus:outline-none focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Filter Toggle */}
+          <div className="text-center mb-4">
+            <motion.button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center space-x-2 mx-auto px-6 py-2 bg-white/10 border border-white/20 rounded-full text-gray-300 hover:text-white hover:bg-white/15 transition-all duration-300 backdrop-blur-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Filter className="w-4 h-4" />
+              <span>Filters</span>
+              <motion.div
+                animate={{ rotate: showFilters ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </motion.div>
+            </motion.button>
+          </div>
+
+          {/* Filter Options */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                className="max-w-4xl mx-auto"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Category Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-3">Category</label>
+                      <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:border-cyan-400/50 transition-all duration-300"
+                      >
+                        <option value="all" className="bg-gray-800">All Categories</option>
+                        {getUniqueCategories().map(category => (
+                          <option key={category} value={category} className="bg-gray-800">{category}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Technology Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-3">Technology</label>
+                      <select
+                        value={selectedTech}
+                        onChange={(e) => setSelectedTech(e.target.value)}
+                        className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:border-cyan-400/50 transition-all duration-300"
+                      >
+                        <option value="all" className="bg-gray-800">All Technologies</option>
+                        {getUniqueTechnologies().map(tech => (
+                          <option key={tech} value={tech} className="bg-gray-800">{tech}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Active Filters & Clear */}
+                  {(searchTerm || selectedCategory !== 'all' || selectedTech !== 'all') && (
+                    <div className="mt-4 pt-4 border-t border-white/10">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm text-gray-400">Active filters:</span>
+                        {searchTerm && (
+                          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm border border-cyan-400/30">
+                            Search: "{searchTerm}"
+                          </span>
+                        )}
+                        {selectedCategory !== 'all' && (
+                          <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm border border-blue-400/30">
+                            Category: {selectedCategory}
+                          </span>
+                        )}
+                        {selectedTech !== 'all' && (
+                          <span className="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm border border-green-400/30">
+                            Tech: {selectedTech}
+                          </span>
+                        )}
+                        <button
+                          onClick={clearFilters}
+                          className="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm border border-red-400/30 hover:bg-red-500/30 transition-colors"
+                        >
+                          Clear All
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Results Count */}
+          <div className="text-center mt-4">
+            <span className="text-sm text-gray-400">
+              Showing {filteredProjects.length} of {projects.length} project{filteredProjects.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+        </motion.div>
+
         {/* Projects Grid */}
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4"
           variants={containerVariants}
         >
-          {projects.map((project) => {
+          {filteredProjects.length === 0 ? (
+            <motion.div
+              className="col-span-full text-center py-12"
+              variants={cardVariants}
+            >
+              <div className="text-gray-400 text-lg mb-4">No projects found</div>
+              <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+              <button
+                onClick={clearFilters}
+                className="mt-4 px-6 py-2 bg-cyan-500/20 text-cyan-300 rounded-full border border-cyan-400/30 hover:bg-cyan-500/30 transition-colors"
+              >
+                Clear Filters
+              </button>
+            </motion.div>
+          ) : (
+            filteredProjects.map((project) => {
             const theme = getCategoryTheme(project.category);
             const IconComponent = theme.icon;
 
@@ -232,7 +435,7 @@ export const ProjectUniverse: React.FC = () => {
                 </div>
               </motion.div>
             );
-          })}
+          }))}
         </motion.div>
 
         {/* Black Hole Transition & Project Detail Modal */}
