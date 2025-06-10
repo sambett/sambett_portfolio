@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Home, Briefcase, Globe, MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Home, Briefcase, Globe, MessageCircle, Menu, X } from 'lucide-react';
 
 interface NavigationProps {
   currentSection: number;
@@ -12,12 +12,23 @@ export const Navigation: React.FC<NavigationProps> = ({
   currentSection,
   onSectionChange,
 }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const navItems = [
     { id: 0, icon: Home, label: 'Identity', color: 'text-purple-400' },
     { id: 1, icon: Briefcase, label: 'Projects', color: 'text-blue-400' },
     { id: 2, icon: Globe, label: 'Global Impact', color: 'text-green-400' },
     { id: 3, icon: MessageCircle, label: 'Contact', color: 'text-pink-400' },
   ];
+
+  const handleMobileNavigation = (sectionId: number) => {
+    onSectionChange(sectionId);
+    setIsMobileMenuOpen(false); // Close menu after navigation
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
     <>
@@ -78,51 +89,69 @@ export const Navigation: React.FC<NavigationProps> = ({
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <motion.button
+              onClick={toggleMobileMenu}
               className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20"
               whileTap={{ scale: 0.9 }}
             >
-              <div className="w-6 h-6 flex flex-col justify-center space-y-1">
-                <div className="w-6 h-0.5 bg-white"></div>
-                <div className="w-6 h-0.5 bg-white"></div>
-                <div className="w-6 h-0.5 bg-white"></div>
-              </div>
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-white" />
+              ) : (
+                <Menu className="w-5 h-5 text-white" />
+              )}
             </motion.button>
           </div>
         </div>
       </motion.nav>
 
       {/* Mobile Navigation Menu */}
-      <motion.div
-        className="fixed top-20 right-6 z-40 md:hidden"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
-      >
-        <div className="bg-black/80 backdrop-blur-lg rounded-2xl border border-white/10 p-4 space-y-2">
-          {navItems.map((item) => {
-            const IconComponent = item.icon;
-            const isActive = currentSection === item.id;
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
             
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => onSectionChange(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 ${
-                  isActive 
-                    ? 'bg-white/10 border border-white/20' 
-                    : 'hover:bg-white/5'
-                }`}
-                whileTap={{ scale: 0.95 }}
-              >
-                <IconComponent className={`w-5 h-5 ${isActive ? item.color : 'text-gray-400'}`} />
-                <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-400'}`}>
-                  {item.label}
-                </span>
-              </motion.button>
-            );
-          })}
-        </div>
-      </motion.div>
+            {/* Menu */}
+            <motion.div
+              className="fixed top-20 right-6 z-40 md:hidden"
+              initial={{ opacity: 0, scale: 0.8, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: -20 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              <div className="bg-black/90 backdrop-blur-lg rounded-2xl border border-white/20 p-4 space-y-2 shadow-xl">
+                {navItems.map((item) => {
+                  const IconComponent = item.icon;
+                  const isActive = currentSection === item.id;
+                  
+                  return (
+                    <motion.button
+                      key={item.id}
+                      onClick={() => handleMobileNavigation(item.id)}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 ${
+                        isActive 
+                          ? 'bg-white/20 border border-white/30' 
+                          : 'hover:bg-white/10'
+                      }`}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <IconComponent className={`w-5 h-5 ${isActive ? item.color : 'text-gray-400'}`} />
+                      <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-300'}`}>
+                        {item.label}
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Help Text - Keyboard Navigation Hint */}
       <motion.div
@@ -147,8 +176,8 @@ export const Navigation: React.FC<NavigationProps> = ({
         transition={{ delay: 2, duration: 0.8 }}
       >
         {[
-          { icon: MessageCircle, action: () => onSectionChange(3), color: 'from-pink-500 to-purple-500', label: 'Contact' },
-          { icon: Briefcase, action: () => onSectionChange(1), color: 'from-blue-500 to-cyan-500', label: 'Projects' },
+          { icon: MessageCircle, action: () => { onSectionChange(3); setIsMobileMenuOpen(false); }, color: 'from-pink-500 to-purple-500', label: 'Contact' },
+          { icon: Briefcase, action: () => { onSectionChange(1); setIsMobileMenuOpen(false); }, color: 'from-blue-500 to-cyan-500', label: 'Projects' },
         ].map((action, index) => (
           <motion.button
             key={index}
