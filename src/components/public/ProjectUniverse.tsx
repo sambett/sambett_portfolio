@@ -176,9 +176,58 @@ export const ProjectUniverse: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
+      {/* Subtle Grid/Spider Web Background */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+            radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
+            radial-gradient(circle at 75% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
+            radial-gradient(circle at 25% 75%, rgba(255,255,255,0.1) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px, 60px 60px, 120px 120px, 120px 120px, 120px 120px, 120px 120px'
+        }}></div>
+        
+        {/* Spider web connecting lines */}
+        <svg className="absolute inset-0 w-full h-full">
+          {[...Array(8)].map((_, i) => (
+            <motion.line
+              key={i}
+              x1="50%"
+              y1="50%"
+              x2={`${50 + Math.cos(i * Math.PI / 4) * 40}%`}
+              y2={`${50 + Math.sin(i * Math.PI / 4) * 40}%`}
+              stroke="rgba(255,255,255,0.03)"
+              strokeWidth="1"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 3, delay: i * 0.2 }}
+            />
+          ))}
+          
+          {/* Concentric web circles */}
+          {[20, 30, 40].map((radius, i) => (
+            <motion.circle
+              key={i}
+              cx="50%"
+              cy="50%"
+              r={`${radius}%`}
+              fill="none"
+              stroke="rgba(255,255,255,0.02)"
+              strokeWidth="1"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 4, delay: i * 0.5 }}
+            />
+          ))}
+        </svg>
+      </div>
+
       <motion.div
-        className="max-w-7xl mx-auto"
+        className="max-w-7xl mx-auto relative z-10"
         variants={containerVariants}
         initial="hidden"
         animate="visible"

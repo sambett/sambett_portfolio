@@ -201,7 +201,7 @@ export const SkillsConstellation: React.FC = () => {
           })}
         </motion.div>
 
-        {/* Enhanced Skills Constellation Display */}
+        {/* Skills Constellation Display */}
         <div className="relative">
           {skillCategories.map((category, categoryIndex) => {
             if (selectedCategory && selectedCategory !== category.name) return null;
@@ -209,190 +209,123 @@ export const SkillsConstellation: React.FC = () => {
             return (
               <motion.div
                 key={category.name}
-                className="relative mb-20"
+                className="relative mb-16"
                 variants={categoryVariants}
               >
-                {/* Enhanced Category Header */}
+                {/* Category Title */}
                 {!selectedCategory && (
-                  <div className="text-center mb-12">
-                    <motion.div 
-                      className="inline-flex items-center space-x-3 mb-4"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${category.gradient} flex items-center justify-center`}>
-                        <category.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className={`text-3xl font-bold ${category.color}`}>
-                        {category.name}
-                      </h3>
-                    </motion.div>
-                    <div className="w-24 h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto"></div>
+                  <div className="text-center mb-8">
+                    <h3 className={`text-2xl font-bold ${category.color}`}>
+                      {category.name}
+                    </h3>
                   </div>
                 )}
 
-                {/* Professional Constellation Container */}
-                <div className="relative h-[500px] flex items-center justify-center bg-gradient-to-br from-white/5 to-transparent rounded-3xl border border-white/10 backdrop-blur-sm overflow-hidden">
-                  
-                  {/* Grid Background */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: `
-                        linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-                      `,
-                      backgroundSize: '40px 40px'
-                    }}></div>
-                  </div>
-
-                  {/* Central Hub with Professional Design */}
+                {/* Constellation Container */}
+                <div className="relative h-96 flex items-center justify-center">
+                  {/* Center Hub */}
                   <motion.div
-                    className="absolute w-20 h-20 rounded-full border-2 border-white/30 backdrop-blur-md bg-white/10 flex items-center justify-center z-10"
+                    className={`absolute w-16 h-16 rounded-full bg-gradient-to-r ${category.gradient} blur-sm opacity-60`}
                     animate={{
-                      boxShadow: [
-                        `0 0 20px ${category.color.replace('text-', 'rgba(').replace('-400', '')}1, 0.3)`,
-                        `0 0 40px ${category.color.replace('text-', 'rgba(').replace('-400', '')}1, 0.5)`,
-                        `0 0 20px ${category.color.replace('text-', 'rgba(').replace('-400', '')}1, 0.3)`
-                      ]
+                      scale: [1, 1.2, 1],
+                      opacity: [0.6, 0.8, 0.6],
                     }}
                     transition={{
                       duration: 3,
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                  >
-                    <category.icon className={`w-8 h-8 ${category.color}`} />
-                  </motion.div>
+                  />
                   
-                  {/* Professional Orbital Rings */}
-                  {[0, 1, 2, 3].map((orbit) => (
+                  {/* Orbital Rings */}
+                  {[0, 1, 2].map((orbit) => (
                     <motion.div
                       key={orbit}
-                      className="absolute border border-white/20 rounded-full"
+                      className="absolute border border-white/10 rounded-full"
                       style={{
-                        width: `${(80 + orbit * 60)}px`,
-                        height: `${(80 + orbit * 60)}px`,
-                        borderStyle: orbit % 2 === 0 ? 'solid' : 'dashed',
+                        width: `${(getOrbitRadius(orbit * 6, category.skills.length) * 2)}px`,
+                        height: `${(getOrbitRadius(orbit * 6, category.skills.length) * 2)}px`,
                       }}
-                      animate={{ rotate: orbit % 2 === 0 ? 360 : -360 }}
+                      animate={{ rotate: 360 }}
                       transition={{
-                        duration: 60 + orbit * 30,
+                        duration: 30 + orbit * 20,
                         repeat: Infinity,
                         ease: "linear",
                       }}
                     />
                   ))}
 
-                  {/* Enhanced Skills as Professional Nodes */}
+                  {/* Skills as Orbiting Planets */}
                   {category.skills.map((skill, index) => {
-                    const angle = (index * (360 / category.skills.length)) * (Math.PI / 180);
-                    const orbit = Math.floor(skill.proficiency / 3); // 0-3 orbits based on proficiency
-                    const radius = 80 + orbit * 60;
-                    
-                    const position = {
-                      x: Math.cos(angle) * radius,
-                      y: Math.sin(angle) * radius,
-                    };
+                    const position = getSkillPosition(index, category.skills.length, categoryIndex);
+                    const size = Math.max(8, skill.proficiency * 2);
                     
                     return (
                       <motion.div
                         key={skill.name}
-                        className="absolute cursor-pointer group z-20"
+                        className="absolute cursor-pointer group"
                         style={{
                           left: `calc(50% + ${position.x}px)`,
                           top: `calc(50% + ${position.y}px)`,
                           transform: 'translate(-50%, -50%)',
                         }}
+                        animate={{
+                          rotate: 360,
+                        }}
+                        transition={{
+                          duration: 20 + index * 3,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
                         onHoverStart={() => setHoveredSkill(skill.name)}
                         onHoverEnd={() => setHoveredSkill(null)}
-                        whileHover={{ scale: 1.3, zIndex: 30 }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
+                        whileHover={{ scale: 1.5 }}
                       >
-                        {/* Professional Skill Node */}
+                        {/* Skill Planet */}
                         <motion.div
-                          className={`relative w-12 h-12 rounded-xl ${skill.color} border-2 border-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}
+                          className={`w-${Math.floor(size/4)*4} h-${Math.floor(size/4)*4} rounded-full ${skill.color} relative overflow-hidden`}
                           style={{
-                            background: `linear-gradient(135deg, ${skill.color.replace('bg-', '')} 0%, ${skill.color.replace('bg-', '').replace('-500', '-700')} 100%)`,
+                            width: `${size}px`,
+                            height: `${size}px`,
+                            boxShadow: `0 0 ${size}px ${skill.color.replace('bg-', 'rgba(')}-500, 0.3)`,
                           }}
                         >
-                          {/* Skill Initial */}
-                          <span className="text-white font-bold text-sm">
-                            {skill.name.charAt(0)}
-                          </span>
-                          
-                          {/* Proficiency Indicator */}
-                          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 border border-white/30 flex items-center justify-center">
-                            <span className="text-xs font-bold text-white">{skill.proficiency}</span>
-                          </div>
-                          
-                          {/* Experience Badge */}
-                          <div className="absolute -bottom-1 -left-1 px-1 py-0.5 bg-black/80 rounded text-xs text-white border border-white/20">
-                            {skill.years}y
-                          </div>
+                          {/* Proficiency Ring */}
+                          <div
+                            className="absolute inset-0 rounded-full border-2 border-white/30"
+                            style={{
+                              borderWidth: `${skill.proficiency / 5}px`,
+                            }}
+                          />
                         </motion.div>
 
-                        {/* Enhanced Skill Tooltip */}
+                        {/* Skill Tooltip */}
                         <AnimatePresence>
                           {hoveredSkill === skill.name && (
                             <motion.div
-                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 z-40"
+                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-10"
                               initial={{ opacity: 0, y: 10, scale: 0.8 }}
                               animate={{ opacity: 1, y: 0, scale: 1 }}
                               exit={{ opacity: 0, y: 10, scale: 0.8 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <div className="bg-gray-900/95 text-white p-4 rounded-xl border border-white/20 backdrop-blur-md shadow-2xl min-w-max max-w-xs">
-                                <div className="font-bold text-lg mb-2">{skill.name}</div>
-                                
-                                {/* Proficiency Bar */}
-                                <div className="mb-3">
-                                  <div className="flex items-center justify-between text-xs text-gray-300 mb-1">
-                                    <span>Proficiency</span>
-                                    <span>{skill.proficiency}/10</span>
-                                  </div>
-                                  <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                    <motion.div
-                                      className="h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-full"
-                                      initial={{ width: 0 }}
-                                      animate={{ width: `${skill.proficiency * 10}%` }}
-                                      transition={{ duration: 0.8, delay: 0.2 }}
-                                    />
-                                  </div>
+                              <div className="bg-black/90 text-white p-3 rounded-lg border border-white/20 backdrop-blur-sm min-w-max">
+                                <div className="font-bold text-sm">{skill.name}</div>
+                                <div className="text-xs text-gray-300 mt-1">
+                                  {skill.years} year{skill.years !== 1 ? 's' : ''} • {skill.proficiency}/10 proficiency
                                 </div>
-                                
-                                <div className="text-sm text-gray-300 mb-2">
-                                  <strong>{skill.years}</strong> year{skill.years !== 1 ? 's' : ''} experience
-                                </div>
-                                
-                                {skill.projects && skill.projects.length > 0 && (
-                                  <div className="text-sm">
-                                    <div className="text-cyan-300 font-medium mb-1">Projects:</div>
-                                    <div className="flex flex-wrap gap-1">
-                                      {skill.projects.map((project, idx) => (
-                                        <span key={idx} className="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded text-xs border border-cyan-400/30">
-                                          {project}
-                                        </span>
-                                      ))}
-                                    </div>
+                                {skill.projects && (
+                                  <div className="text-xs text-cyan-300 mt-1">
+                                    Projects: {skill.projects.join(', ')}
                                   </div>
                                 )}
-                                
-                                {skill.certifications && skill.certifications.length > 0 && (
-                                  <div className="text-sm mt-2">
-                                    <div className="flex items-center text-yellow-300 font-medium mb-1">
-                                      <Award className="w-3 h-3 mr-1" />
-                                      Certified
-                                    </div>
-                                    <div className="text-yellow-200 text-xs">
-                                      {skill.certifications.join(', ')}
-                                    </div>
+                                {skill.certifications && (
+                                  <div className="text-xs text-yellow-300 mt-1">
+                                    <Award className="w-3 h-3 inline mr-1" />
+                                    {skill.certifications.join(', ')}
                                   </div>
                                 )}
                               </div>
-                              
-                              {/* Tooltip Arrow */}
-                              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900/95"></div>
                             </motion.div>
                           )}
                         </AnimatePresence>
@@ -400,8 +333,8 @@ export const SkillsConstellation: React.FC = () => {
                     );
                   })}
 
-                  {/* Professional Connection Network */}
-                  <svg className="absolute inset-0 pointer-events-none z-10">
+                  {/* Connecting Lines for Related Skills */}
+                  <svg className="absolute inset-0 pointer-events-none">
                     {category.skills.map((skill, index) => {
                       if (!skill.projects) return null;
                       
@@ -414,21 +347,8 @@ export const SkillsConstellation: React.FC = () => {
                         
                         if (!sharedProjects?.length) return null;
                         
-                        const angle1 = (index * (360 / category.skills.length)) * (Math.PI / 180);
-                        const orbit1 = Math.floor(skill.proficiency / 3);
-                        const radius1 = 80 + orbit1 * 60;
-                        const pos1 = {
-                          x: Math.cos(angle1) * radius1,
-                          y: Math.sin(angle1) * radius1,
-                        };
-
-                        const angle2 = (otherIndex * (360 / category.skills.length)) * (Math.PI / 180);
-                        const orbit2 = Math.floor(otherSkill.proficiency / 3);
-                        const radius2 = 80 + orbit2 * 60;
-                        const pos2 = {
-                          x: Math.cos(angle2) * radius2,
-                          y: Math.sin(angle2) * radius2,
-                        };
+                        const pos1 = getSkillPosition(index, category.skills.length, categoryIndex);
+                        const pos2 = getSkillPosition(otherIndex, category.skills.length, categoryIndex);
                         
                         return (
                           <motion.line
@@ -437,11 +357,10 @@ export const SkillsConstellation: React.FC = () => {
                             y1={`calc(50% + ${pos1.y}px)`}
                             x2={`calc(50% + ${pos2.x}px)`}
                             y2={`calc(50% + ${pos2.y}px)`}
-                            stroke="rgba(99, 102, 241, 0.3)"
-                            strokeWidth="2"
-                            strokeDasharray="5,5"
+                            stroke="rgba(255,255,255,0.1)"
+                            strokeWidth="1"
                             initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 0.6 }}
+                            animate={{ pathLength: 1, opacity: 0.3 }}
                             transition={{ duration: 2, delay: index * 0.1 }}
                           />
                         );
@@ -454,48 +373,12 @@ export const SkillsConstellation: React.FC = () => {
           })}
         </div>
 
-        {/* Professional Legend */}
+        {/* Legend */}
         <motion.div
-          className="mt-12 bg-white/5 rounded-2xl border border-white/10 p-6 backdrop-blur-sm"
+          className="text-center text-sm text-gray-400 mt-8"
           variants={categoryVariants}
         >
-          <h4 className="text-lg font-semibold text-white mb-4 text-center">How to Read the Constellation</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xs border border-white/30">
-                R
-              </div>
-              <div className="text-gray-300">
-                <div className="font-medium text-white">Skill Node</div>
-                <div>Letter = Skill initial</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full border border-white/30 flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">9</span>
-                </div>
-              </div>
-              <div className="text-gray-300">
-                <div className="font-medium text-white">Proficiency Level</div>
-                <div>1-10 scale rating</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="flex space-x-1">
-                <div className="w-2 h-6 border border-white/30 rounded-full"></div>
-                <div className="w-2 h-6 border border-white/30 rounded-full"></div>
-                <div className="w-2 h-6 border border-white/30 rounded-full"></div>
-              </div>
-              <div className="text-gray-300">
-                <div className="font-medium text-white">Orbit Rings</div>
-                <div>Grouped by proficiency</div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-white/10 text-center text-gray-400">
-            <p>Dashed lines connect skills used in shared projects • Hover any skill for detailed information</p>
-          </div>
+          <p>Planet size represents proficiency level • Ring thickness shows experience depth • Lines connect skills used in shared projects</p>
         </motion.div>
       </motion.div>
     </div>
