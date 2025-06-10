@@ -748,27 +748,36 @@ export const ProjectUniverse: React.FC = () => {
                   transformStyle: "preserve-3d"
                 }}
               >
-                {/* Glass morphism container */}
+                {/* Glass morphism container - Fixed borders */}
                 <motion.div
-                  className="w-full h-full rounded-3xl border backdrop-blur-2xl shadow-2xl"
+                  className="w-full h-full backdrop-blur-2xl shadow-2xl overflow-hidden"
                   style={{
                     background: `linear-gradient(135deg, 
                       rgba(255, 255, 255, 0.1) 0%, 
                       rgba(255, 255, 255, 0.05) 100%
                     )`,
-                    borderColor: `${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')}40`,
+                    borderRadius: '24px',
+                    border: `2px solid ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')}40`,
                     boxShadow: `
-                      0 0 100px ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')}30,
-                      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                      0 20px 60px rgba(0, 0, 0, 0.5)
+                      0 0 80px ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')}20,
+                      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                      0 25px 50px rgba(0, 0, 0, 0.4)
                     `
                   }}
-                  initial={{ borderWidth: 0 }}
-                  animate={{ borderWidth: 2 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
                 >
-                {/* Header */}
-                <div className={`relative p-6 border-b border-white/10 bg-gradient-to-r ${getCategoryTheme(selectedProject.category).gradient} bg-opacity-10`}>
+                {/* Header - Fixed background */}
+                <div 
+                  className="relative p-6 border-b border-white/10"
+                  style={{
+                    background: `linear-gradient(135deg, 
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-900')}15 0%, 
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-800')}10 100%
+                    )`
+                  }}
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-4">
                       <motion.div
@@ -817,24 +826,33 @@ export const ProjectUniverse: React.FC = () => {
                     </motion.button>
                   </div>
 
-                  {/* Section Navigation */}
+                  {/* Section Navigation - Fixed contrast */}
                   <motion.div 
-                    className="flex space-x-1 mt-6"
+                    className="flex flex-wrap gap-1 mt-6"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5 }}
                   >
                     {sections.map((section) => {
                       const SectionIcon = section.icon;
+                      const isActive = activeSection === section.id;
                       return (
                         <motion.button
                           key={section.id}
                           onClick={() => setActiveSection(section.id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ${
-                            activeSection === section.id
-                              ? `${getCategoryTheme(selectedProject.category).bg} ${getCategoryTheme(selectedProject.category).color} ${getCategoryTheme(selectedProject.category).border} border`
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 border ${
+                            isActive
+                              ? 'bg-white/15 text-white border-white/30 font-semibold shadow-lg'
+                              : 'text-gray-300 hover:text-white hover:bg-white/10 border-white/10 hover:border-white/20'
                           }`}
+                          style={{
+                            backgroundColor: isActive 
+                              ? `${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')}25`
+                              : undefined,
+                            borderColor: isActive 
+                              ? `${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')}50`
+                              : undefined
+                          }}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -846,9 +864,10 @@ export const ProjectUniverse: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Content Area with enhanced styling */}
+                {/* Content Area with enhanced styling - Fixed height */}
                 <motion.div 
-                  className="p-6 h-96 overflow-y-auto custom-scrollbar relative"
+                  className="p-6 max-h-96 overflow-y-auto custom-scrollbar relative"
+                  style={{ minHeight: '300px' }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
