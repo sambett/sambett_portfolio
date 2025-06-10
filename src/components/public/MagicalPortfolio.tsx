@@ -253,7 +253,7 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
               disabled={isTransitioning}
             >
               <div className="text-gray-400 text-xs opacity-75 group-hover:opacity-100 transition-opacity">
-                {currentSection === 0 ? 'explore my journey' : 'continue'}
+                continue
               </div>
               <motion.div
                 className="w-6 h-10 border-2 border-white/40 rounded-full relative overflow-hidden group-hover:border-white/60 transition-colors"

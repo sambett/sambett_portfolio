@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Globe, Code, Heart } from 'lucide-react';
+import { Globe, Code, Heart } from 'lucide-react';
 
 export const IdentityCard: React.FC = () => {
   const containerVariants = {
@@ -53,22 +53,17 @@ export const IdentityCard: React.FC = () => {
             variants={floatingVariants}
             animate="animate"
           >
-            <div className="w-full h-full rounded-full bg-black flex items-center justify-center border-2 border-white/10">
-              {/* Centered Avatar Initials */}
-              <div className="text-4xl sm:text-6xl font-bold bg-gradient-to-br from-purple-300 to-cyan-300 bg-clip-text text-transparent">
-                SB
-              </div>
+            <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/10">
+              {/* Profile Photo */}
+              <img 
+                src="/photo.jpg" 
+                alt="Selma Bettaieb" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </motion.div>
           
           {/* Floating Icons */}
-          <motion.div
-            className="absolute -top-4 -right-4"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          >
-            <Sparkles className="w-8 h-8 text-yellow-400" />
-          </motion.div>
           <motion.div
             className="absolute -bottom-4 -left-4"
             animate={{ rotate: -360 }}
@@ -163,21 +158,7 @@ export const IdentityCard: React.FC = () => {
           ))}
         </motion.div>
 
-        {/* Impact Badge - Repositioned for better spacing */}
-        <motion.div
-          className="mt-8"
-          variants={itemVariants}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2 }}
-        >
-          <div className="bg-gradient-to-r from-purple-600/20 to-cyan-600/20 backdrop-blur-sm border border-purple-400/30 rounded-full px-4 py-2 mx-auto w-fit">
-            <div className="text-purple-300 text-sm font-medium flex items-center space-x-2">
-              <Heart className="w-4 h-4" />
-              <span>200+ student lives impacted</span>
-            </div>
-          </div>
-        </motion.div>
+
       </div>
     </motion.div>
   );
