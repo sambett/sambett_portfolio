@@ -541,89 +541,232 @@ export const ProjectUniverse: React.FC = () => {
         {/* Enhanced Project Detail Modal */}
         <AnimatePresence>
           {selectedProject && (
-            <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Enhanced Cosmic Background with Category Theme */}
-              <div className="absolute inset-0">
-                {/* Base cosmic gradient */}
-                <motion.div 
-                  className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(135deg, 
-                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-900')} 0%, 
-                      #000000 40%, 
-                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-800')} 100%)`
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1 }}
-                />
-                
-                {/* Animated stars with category theme */}
-                <div className="absolute inset-0">
-                  {[...Array(80)].map((_, i) => (
+            <>
+              {/* Backdrop with blur effect */}
+              <motion.div
+                className="fixed inset-0 z-40 backdrop-blur-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                onClick={closeProject}
+              />
+              
+              <motion.div
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                {/* Spectacular Cosmic Background with Category Theme */}
+                <div className="absolute inset-0 overflow-hidden">
+                  {/* Dynamic base gradient that shifts with category */}
+                  <motion.div 
+                    className="absolute inset-0"
+                    style={{
+                      background: `
+                        radial-gradient(circle at 20% 30%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-700')} 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-800')} 0%, transparent 40%),
+                        linear-gradient(135deg, #000000 0%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-900')} 100%)
+                      `
+                    }}
+                    initial={{ opacity: 0, scale: 1.2 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                  />
+                  
+                  {/* Flowing energy streams */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{
+                      background: `
+                        linear-gradient(45deg, transparent 0%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 1%, transparent 2%),
+                        linear-gradient(-45deg, transparent 0%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 1%, transparent 2%)
+                      `,
+                      backgroundSize: '200px 200px, 250px 250px',
+                      opacity: 0.1
+                    }}
+                    animate={{
+                      backgroundPosition: ['0% 0%', '100% 100%']
+                    }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                  />
+                  
+                  {/* Premium twinkling stars with depth */}
+                  <div className="absolute inset-0">
+                    {[...Array(120)].map((_, i) => {
+                      const size = Math.random() * 4 + 1;
+                      const isThemed = Math.random() > 0.6;
+                      return (
+                        <motion.div
+                          key={i}
+                          className="absolute rounded-full"
+                          style={{
+                            width: size + 'px',
+                            height: size + 'px',
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            background: isThemed
+                              ? getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')
+                              : '#ffffff',
+                            boxShadow: isThemed
+                              ? `0 0 ${size * 3}px ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')}`
+                              : `0 0 ${size * 2}px rgba(255,255,255,0.8)`
+                          }}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{
+                            opacity: [0.3, 1, 0.3],
+                            scale: [0.5, 1.2, 0.5],
+                          }}
+                          transition={{
+                            duration: Math.random() * 5 + 3,
+                            repeat: Infinity,
+                            delay: Math.random() * 3,
+                            ease: "easeInOut",
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Cosmic dust clouds */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{
+                      background: `
+                        radial-gradient(ellipse 600px 200px at 30% 20%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 70%),
+                        radial-gradient(ellipse 400px 300px at 70% 80%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 0%, transparent 60%),
+                        radial-gradient(ellipse 500px 150px at 10% 60%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-700')} 0%, transparent 80%)
+                      `,
+                      opacity: 0.15
+                    }}
+                    animate={{
+                      opacity: [0.1, 0.25, 0.1],
+                      scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                      duration: 15,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  
+                  {/* Dynamic spiral galaxy */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{
+                      background: `conic-gradient(
+                        from 0deg, 
+                        transparent 0deg, 
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 15deg, 
+                        transparent 30deg,
+                        transparent 60deg,
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 90deg, 
+                        transparent 120deg,
+                        transparent 180deg,
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 200deg,
+                        transparent 240deg,
+                        transparent 300deg,
+                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 330deg,
+                        transparent 360deg
+                      )`,
+                      maskImage: 'radial-gradient(circle at center, transparent 30%, black 60%, transparent 85%)',
+                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 30%, black 60%, transparent 85%)',
+                      opacity: 0.2
+                    }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+                  />
+                  
+                  {/* Floating energy orbs */}
+                  {[...Array(8)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute rounded-full"
+                      className="absolute rounded-full blur-sm"
                       style={{
-                        width: Math.random() * 3 + 1 + 'px',
-                        height: Math.random() * 3 + 1 + 'px',
+                        width: Math.random() * 60 + 20 + 'px',
+                        height: Math.random() * 60 + 20 + 'px',
+                        background: `radial-gradient(circle, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 70%)`,
                         left: `${Math.random() * 100}%`,
                         top: `${Math.random() * 100}%`,
-                        background: Math.random() > 0.7 
-                          ? getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')
-                          : '#ffffff'
                       }}
                       animate={{
-                        opacity: [0.2, 1, 0.2],
-                        scale: [0.5, 1.5, 0.5],
+                        x: [0, Math.random() * 200 - 100],
+                        y: [0, Math.random() * 200 - 100],
+                        opacity: [0.2, 0.6, 0.2],
+                        scale: [0.8, 1.2, 0.8],
                       }}
                       transition={{
-                        duration: Math.random() * 4 + 2,
+                        duration: Math.random() * 20 + 15,
                         repeat: Infinity,
-                        delay: Math.random() * 5,
                         ease: "easeInOut",
+                        delay: i * 2,
                       }}
                     />
                   ))}
                 </div>
-                
-                {/* Category-themed rotating galaxy */}
-                <motion.div
-                  className="absolute inset-0"
-                  style={{
-                    background: `conic-gradient(
-                      from 0deg, 
-                      transparent 0deg, 
-                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 45deg, 
-                      transparent 90deg, 
-                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 180deg,
-                      transparent 225deg,
-                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 270deg,
-                      transparent 315deg
-                    )`,
-                    maskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
-                    opacity: 0.15
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-                />
-              </div>
 
-              {/* Main Modal Container */}
+              {/* Main Modal Container with spectacular entrance */}
               <motion.div
-                className="relative z-10 w-full max-w-6xl max-h-[90vh] bg-gray-900/95 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden"
-                initial={{ scale: 0.5, opacity: 0, rotateY: -15 }}
-                animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                exit={{ scale: 0.8, opacity: 0, rotateY: 15 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative z-10 w-full max-w-6xl max-h-[90vh] overflow-hidden"
+                initial={{ 
+                  scale: 0.3, 
+                  opacity: 0, 
+                  rotateX: -30,
+                  rotateY: 45,
+                  z: -1000
+                }}
+                animate={{ 
+                  scale: 1, 
+                  opacity: 1, 
+                  rotateX: 0,
+                  rotateY: 0,
+                  z: 0
+                }}
+                exit={{ 
+                  scale: 0.2, 
+                  opacity: 0, 
+                  rotateX: 30,
+                  rotateY: -45,
+                  z: -1000
+                }}
+                transition={{ 
+                  duration: 1.2, 
+                  ease: [0.23, 1, 0.32, 1],
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 25
+                }}
+                style={{
+                  perspective: "1000px",
+                  transformStyle: "preserve-3d"
+                }}
               >
+                {/* Glass morphism container */}
+                <motion.div
+                  className="w-full h-full rounded-3xl border backdrop-blur-2xl shadow-2xl"
+                  style={{
+                    background: `linear-gradient(135deg, 
+                      rgba(255, 255, 255, 0.1) 0%, 
+                      rgba(255, 255, 255, 0.05) 100%
+                    )`,
+                    borderColor: `${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')}40`,
+                    boxShadow: `
+                      0 0 100px ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')}30,
+                      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                      0 20px 60px rgba(0, 0, 0, 0.5)
+                    `
+                  }}
+                  initial={{ borderWidth: 0 }}
+                  animate={{ borderWidth: 2 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                >
                 {/* Header */}
                 <div className={`relative p-6 border-b border-white/10 bg-gradient-to-r ${getCategoryTheme(selectedProject.category).gradient} bg-opacity-10`}>
                   <div className="flex items-start justify-between">
@@ -703,8 +846,21 @@ export const ProjectUniverse: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Content Area */}
-                <div className="p-6 h-96 overflow-y-auto custom-scrollbar">
+                {/* Content Area with enhanced styling */}
+                <motion.div 
+                  className="p-6 h-96 overflow-y-auto custom-scrollbar relative"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8, duration: 0.5 }}
+                >
+                  {/* Content background pattern */}
+                  <div 
+                    className="absolute inset-0 opacity-5 pointer-events-none"
+                    style={{
+                      backgroundImage: `radial-gradient(circle at 1px 1px, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 1px, transparent 0)`,
+                      backgroundSize: '20px 20px'
+                    }}
+                  />
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeSection}
@@ -904,15 +1060,17 @@ export const ProjectUniverse: React.FC = () => {
                       )}
                     </motion.div>
                   </AnimatePresence>
-                </div>
+                </motion.div>
+                </motion.div>
               </motion.div>
-            </motion.div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </motion.div>
 
       {/* Custom Scrollbar Styles */}
-      <style jsx global>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
