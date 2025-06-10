@@ -124,41 +124,6 @@ export const IdentityCard: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Key Stats */}
-        <motion.div 
-          variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
-        >
-          {[
-            { number: "3", label: "Countries Volunteered", icon: Globe, color: "text-green-400" },
-            { number: "200+", label: "Students Served", icon: Heart, color: "text-red-400" },
-            { number: "6+", label: "AI Projects Built", icon: Code, color: "text-cyan-400" },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              className="text-center space-y-3"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <div className="relative">
-                <stat.icon className={`w-8 h-8 mx-auto ${stat.color}`} />
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.4 }}
-                  style={{
-                    background: `radial-gradient(circle, ${stat.color.includes('green') ? 'rgba(34, 197, 94, 0.3)' : 
-                      stat.color.includes('red') ? 'rgba(239, 68, 68, 0.3)' : 'rgba(6, 182, 212, 0.3)'} 0%, transparent 70%)`,
-                  }}
-                />
-              </div>
-              <div className="text-3xl font-bold text-white">{stat.number}</div>
-              <div className="text-gray-400">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-
       </div>
     </motion.div>
   );
