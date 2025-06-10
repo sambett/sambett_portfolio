@@ -66,8 +66,14 @@ export const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ onComplete }
             scale: { duration: 2, repeat: Infinity },
           }}
         >
-          <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-purple-400 via-pink-400 to-cyan-400 flex items-center justify-center">
-            <span className="text-2xl font-bold text-white">SB</span>
+          <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-purple-400 via-pink-400 to-cyan-400 p-1">
+            <div className="w-full h-full rounded-full overflow-hidden">
+              <img 
+                src="/photo.jpg" 
+                alt="Selma Bettaieb" 
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </motion.div>
 

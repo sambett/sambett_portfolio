@@ -178,19 +178,8 @@ export const ContactNebula: React.FC = () => {
                   <div className={`absolute inset-0 bg-gradient-to-br ${option.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                   
                   <div className="relative z-10 flex items-center space-x-3 sm:space-x-4">
-                    {/* Profile Photo */}
-                    <div className="relative flex-shrink-0">
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-white/20">
-                        <img 
-                          src="/photo.jpg" 
-                          alt="Selma Bettaieb" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      {/* Icon Overlay */}
-                      <div className={`absolute -bottom-1 -right-1 p-1 sm:p-1.5 rounded-full bg-gradient-to-br ${option.color} text-white`}>
-                        <IconComponent className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </div>
+                    <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-br ${option.color} text-white flex-shrink-0`}>
+                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     
                     <div className="flex-1 min-w-0">
@@ -254,17 +243,10 @@ export const ContactNebula: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
               <div className="relative z-10 flex items-center space-x-4">
-                {/* Profile Photo with Download Icon */}
+                {/* Download Icon */}
                 <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-indigo-400/50">
-                    <img 
-                      src="/photo.jpg" 
-                      alt="Selma Bettaieb" 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 p-2 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 text-white">
-                    <Download className="w-4 h-4" />
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center">
+                    <Download className="w-8 h-8 text-white" />
                   </div>
                 </div>
                 
@@ -298,18 +280,11 @@ export const ContactNebula: React.FC = () => {
                     <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                     
                     <div className="relative z-10">
-                      {/* Profile Photo with Certificate Icon */}
+                      {/* Certificate Icon */}
                       <div className="flex items-center space-x-3 mb-3">
                         <div className="relative flex-shrink-0">
-                          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20">
-                            <img 
-                              src="/photo.jpg" 
-                              alt="Selma Bettaieb" 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className={`absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br ${cert.color} text-white`}>
-                            <IconComponent className="w-2.5 h-2.5" />
+                          <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${cert.color} flex items-center justify-center`}>
+                            <IconComponent className="w-5 h-5 text-white" />
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">

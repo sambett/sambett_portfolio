@@ -34,8 +34,14 @@ export const Navigation: React.FC<NavigationProps> = ({
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-cyan-400 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">SB</span>
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-cyan-400 rounded-full p-0.5">
+              <div className="w-full h-full rounded-full overflow-hidden">
+                <img 
+                  src="/photo.jpg" 
+                  alt="Selma Bettaieb" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
             <div className="text-white font-semibold text-lg">
               Selma Bettaieb
