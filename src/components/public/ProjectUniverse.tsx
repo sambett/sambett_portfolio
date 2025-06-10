@@ -1,7 +1,10 @@
-// Fixed TypeScript build issue - removed unused variables
+// Enhanced ProjectUniverse with improved modal experience
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Award, Users, Brain, Leaf, Search, Filter, X } from 'lucide-react';
+import { 
+  ExternalLink, Github, Award, Users, Brain, Leaf, Search, Filter, X, 
+  Calendar, Target, Code2, Play, Info, ArrowRight, ChevronLeft, ChevronRight 
+} from 'lucide-react';
 
 interface Project {
   id: string;
@@ -14,6 +17,8 @@ interface Project {
   impact: string;
   awards?: string[];
   featured: boolean;
+  createdAt?: string;
+  images?: string[];
 }
 
 export const ProjectUniverse: React.FC = () => {
@@ -25,6 +30,10 @@ export const ProjectUniverse: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTech, setSelectedTech] = useState<string>('all');
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Enhanced modal states
+  const [activeSection, setActiveSection] = useState<'overview' | 'technical' | 'impact' | 'showcase'>('overview');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     // Load projects from JSON
@@ -106,7 +115,8 @@ export const ProjectUniverse: React.FC = () => {
           bg: 'bg-blue-900/20',
           border: 'border-blue-400/30',
           icon: Brain,
-          color: 'text-blue-400'
+          color: 'text-blue-400',
+          accent: 'blue'
         };
       case 'optimization':
         return {
@@ -114,7 +124,8 @@ export const ProjectUniverse: React.FC = () => {
           bg: 'bg-green-900/20',
           border: 'border-green-400/30',
           icon: Leaf,
-          color: 'text-green-400'
+          color: 'text-green-400',
+          accent: 'green'
         };
       case 'social':
         return {
@@ -122,7 +133,17 @@ export const ProjectUniverse: React.FC = () => {
           bg: 'bg-red-900/20',
           border: 'border-red-400/30',
           icon: Users,
-          color: 'text-red-400'
+          color: 'text-red-400',
+          accent: 'red'
+        };
+      case 'sustainability':
+        return {
+          gradient: 'from-emerald-500 via-teal-500 to-emerald-600',
+          bg: 'bg-emerald-900/20',
+          border: 'border-emerald-400/30',
+          icon: Leaf,
+          color: 'text-emerald-400',
+          accent: 'emerald'
         };
       default:
         return {
@@ -130,7 +151,8 @@ export const ProjectUniverse: React.FC = () => {
           bg: 'bg-purple-900/20',
           border: 'border-purple-400/30',
           icon: Brain,
-          color: 'text-purple-400'
+          color: 'text-purple-400',
+          accent: 'purple'
         };
     }
   };
@@ -140,6 +162,8 @@ export const ProjectUniverse: React.FC = () => {
     
     setIsTransitioning(true);
     setSelectedProject(project);
+    setActiveSection('overview'); // Reset to overview
+    setCurrentImageIndex(0); // Reset image index
     
     // Reset transition state after animation
     setTimeout(() => setIsTransitioning(false), 1500);
@@ -147,6 +171,33 @@ export const ProjectUniverse: React.FC = () => {
 
   const closeProject = () => {
     setSelectedProject(null);
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'Recent';
+    return new Date(dateString).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long' 
+    });
+  };
+
+  const sections = [
+    { id: 'overview', label: 'Overview', icon: Info },
+    { id: 'technical', label: 'Technical', icon: Code2 },
+    { id: 'impact', label: 'Impact', icon: Target },
+    { id: 'showcase', label: 'Showcase', icon: Play }
+  ] as const;
+
+  const nextImage = () => {
+    if (selectedProject?.images && selectedProject.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % selectedProject.images!.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (selectedProject?.images && selectedProject.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + selectedProject.images!.length) % selectedProject.images!.length);
+    }
   };
 
   const containerVariants = {
@@ -487,300 +538,396 @@ export const ProjectUniverse: React.FC = () => {
           }))}
         </motion.div>
 
-        {/* Black Hole Transition & Project Detail Modal */}
+        {/* Enhanced Project Detail Modal */}
         <AnimatePresence>
           {selectedProject && (
-            <>
-              {/* Enhanced Cosmic Background */}
-              <motion.div
-                className="fixed inset-0 z-50"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-              >
-                {/* Enhanced Multi-layered Cosmic Background - Dynamically Themed */}
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              {/* Enhanced Cosmic Background with Category Theme */}
+              <div className="absolute inset-0">
+                {/* Base cosmic gradient */}
+                <motion.div 
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(135deg, 
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-900')} 0%, 
+                      #000000 40%, 
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-800')} 100%)`
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1 }}
+                />
+                
+                {/* Animated stars with category theme */}
                 <div className="absolute inset-0">
-                  {/* Base cosmic gradient with category theme */}
-                  <motion.div 
-                    className="absolute inset-0"
-                    style={{
-                      background: `linear-gradient(135deg, 
-                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-900')} 0%, 
-                        #000000 40%, 
-                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-800')} 100%)`
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                  />
-                  
-                  {/* Project-themed gradient overlay */}
-                  <motion.div 
-                    className="absolute inset-0"
-                    style={{
-                      background: `
-                        radial-gradient(circle at 30% 40%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 50%), 
-                        radial-gradient(circle at 70% 60%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 0%, transparent 50%),
-                        radial-gradient(circle at 50% 50%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-700')} 0%, transparent 80%)
-                      `,
-                      opacity: 0.15
-                    }}
-                    animate={{
-                      opacity: [0.1, 0.2, 0.1],
-                    }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                  
-                  {/* Themed twinkling stars */}
-                  <div className="absolute inset-0">
-                    {[...Array(100)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute rounded-full"
-                        style={{
-                          width: Math.random() * 3 + 1 + 'px',
-                          height: Math.random() * 3 + 1 + 'px',
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
-                          background: Math.random() > 0.7 
-                            ? getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')
-                            : '#ffffff'
-                        }}
-                        animate={{
-                          opacity: [0.2, 1, 0.2],
-                          scale: [0.5, 1.5, 0.5],
-                        }}
-                        transition={{
-                          duration: Math.random() * 4 + 2,
-                          repeat: Infinity,
-                          delay: Math.random() * 5,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    ))}
-                  </div>
-                  
-                  {/* Floating cosmic dust in category theme */}
-                  <div className="absolute inset-0">
-                    {[...Array(40)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 rounded-full"
-                        style={{
-                          background: getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300'),
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
-                        }}
-                        animate={{
-                          x: [0, Math.random() * 300 - 150],
-                          y: [0, Math.random() * 300 - 150],
-                          opacity: [0, 0.8, 0],
-                          scale: [0, 1.5, 0],
-                        }}
-                        transition={{
-                          duration: Math.random() * 10 + 6,
-                          repeat: Infinity,
-                          delay: Math.random() * 3,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    ))}
-                  </div>
-                  
-                  {/* Animated themed nebula clouds */}
-                  <motion.div
-                    className="absolute inset-0"
-                    style={{
-                      background: `
-                        radial-gradient(ellipse 800px 400px at 25% 30%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 50%), 
-                        radial-gradient(ellipse 600px 300px at 75% 70%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 60%),
-                        radial-gradient(ellipse 400px 600px at 10% 80%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 0%, transparent 70%)
-                      `,
-                      opacity: 0.08
-                    }}
-                    animate={{
-                      opacity: [0.05, 0.15, 0.05],
-                      scale: [1, 1.1, 1],
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                  
-                  {/* Category-themed rotating galaxy arms */}
-                  <motion.div
-                    className="absolute inset-0"
-                    style={{
-                      background: `conic-gradient(
-                        from 0deg, 
-                        transparent 0deg, 
-                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 45deg, 
-                        transparent 90deg, 
-                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 180deg,
-                        transparent 225deg,
-                        ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 270deg,
-                        transparent 315deg
-                      )`,
-                      maskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
-                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
-                      opacity: 0.15
-                    }}
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-                  />
-                  
-                  {/* Pulsing central glow with category theme */}
-                  <motion.div
-                    className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-                    style={{
-                      background: `radial-gradient(circle, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 30%, transparent 70%)`
-                    }}
-                    animate={{
-                      scale: [0.6, 1.4, 0.6],
-                      opacity: [0.1, 0.4, 0.1],
-                    }}
-                    transition={{
-                      duration: 12,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-
-                  {/* Category-specific decorative elements */}
-                  {selectedProject.category.toLowerCase() === 'ai' && (
+                  {[...Array(80)].map((_, i) => (
                     <motion.div
-                      className="absolute inset-0 opacity-20"
+                      key={i}
+                      className="absolute rounded-full"
                       style={{
-                        background: `repeating-linear-gradient(
-                          45deg,
-                          transparent,
-                          transparent 50px,
-                          ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 50px,
-                          ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-600')} 51px
-                        )`
+                        width: Math.random() * 3 + 1 + 'px',
+                        height: Math.random() * 3 + 1 + 'px',
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                        background: Math.random() > 0.7 
+                          ? getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')
+                          : '#ffffff'
                       }}
-                      animate={{ x: [0, 100], opacity: [0.1, 0.3, 0.1] }}
-                      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                      animate={{
+                        opacity: [0.2, 1, 0.2],
+                        scale: [0.5, 1.5, 0.5],
+                      }}
+                      transition={{
+                        duration: Math.random() * 4 + 2,
+                        repeat: Infinity,
+                        delay: Math.random() * 5,
+                        ease: "easeInOut",
+                      }}
                     />
-                  )}
+                  ))}
+                </div>
+                
+                {/* Category-themed rotating galaxy */}
+                <motion.div
+                  className="absolute inset-0"
+                  style={{
+                    background: `conic-gradient(
+                      from 0deg, 
+                      transparent 0deg, 
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 45deg, 
+                      transparent 90deg, 
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 180deg,
+                      transparent 225deg,
+                      ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 270deg,
+                      transparent 315deg
+                    )`,
+                    maskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
+                    opacity: 0.15
+                  }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+                />
+              </div>
 
-                  {selectedProject.category.toLowerCase() === 'optimization' && (
-                    <motion.div className="absolute inset-0">
-                      {[...Array(10)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-px bg-gradient-to-b from-transparent via-green-400 to-transparent"
-                          style={{
-                            left: `${10 + i * 10}%`,
-                            height: '100%',
-                          }}
-                          animate={{
-                            opacity: [0, 0.6, 0],
-                            scaleY: [0, 1, 0],
-                          }}
-                          transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            delay: i * 0.3,
-                          }}
-                        />
-                      ))}
-                    </motion.div>
-                  )}
+              {/* Main Modal Container */}
+              <motion.div
+                className="relative z-10 w-full max-w-6xl max-h-[90vh] bg-gray-900/95 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden"
+                initial={{ scale: 0.5, opacity: 0, rotateY: -15 }}
+                animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                exit={{ scale: 0.8, opacity: 0, rotateY: 15 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                {/* Header */}
+                <div className={`relative p-6 border-b border-white/10 bg-gradient-to-r ${getCategoryTheme(selectedProject.category).gradient} bg-opacity-10`}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center space-x-4">
+                      <motion.div
+                        className={`p-3 rounded-2xl ${getCategoryTheme(selectedProject.category).bg} ${getCategoryTheme(selectedProject.category).border} border`}
+                        whileHover={{ scale: 1.1, rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {React.createElement(getCategoryTheme(selectedProject.category).icon, { 
+                          className: `w-8 h-8 ${getCategoryTheme(selectedProject.category).color}` 
+                        })}
+                      </motion.div>
+                      <div>
+                        <motion.h2 
+                          className="text-3xl md:text-4xl font-bold text-white mb-2"
+                          initial={{ x: -20, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ delay: 0.3 }}
+                        >
+                          {selectedProject.title}
+                        </motion.h2>
+                        <div className="flex items-center space-x-4">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryTheme(selectedProject.category).bg} ${getCategoryTheme(selectedProject.category).color} ${getCategoryTheme(selectedProject.category).border} border`}>
+                            {selectedProject.category}
+                          </span>
+                          <div className="flex items-center space-x-1 text-gray-400">
+                            <Calendar className="w-4 h-4" />
+                            <span className="text-sm">{formatDate(selectedProject.createdAt)}</span>
+                          </div>
+                          {selectedProject.featured && (
+                            <div className="flex items-center space-x-1 text-yellow-400">
+                              <Award className="w-4 h-4" />
+                              <span className="text-sm">Featured</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <motion.button
+                      onClick={closeProject}
+                      className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <X className="w-6 h-6" />
+                    </motion.button>
+                  </div>
+
+                  {/* Section Navigation */}
+                  <motion.div 
+                    className="flex space-x-1 mt-6"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    {sections.map((section) => {
+                      const SectionIcon = section.icon;
+                      return (
+                        <motion.button
+                          key={section.id}
+                          onClick={() => setActiveSection(section.id)}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+                            activeSection === section.id
+                              ? `${getCategoryTheme(selectedProject.category).bg} ${getCategoryTheme(selectedProject.category).color} ${getCategoryTheme(selectedProject.category).border} border`
+                              : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          }`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <SectionIcon className="w-4 h-4" />
+                          <span className="text-sm font-medium">{section.label}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </motion.div>
                 </div>
 
-                {/* Project Detail Content */}
-                <motion.div
-                  className="relative z-10 flex items-center justify-center min-h-screen p-8"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5, duration: 0.8 }}
-                >
-                  <div className="max-w-4xl mx-auto bg-gray-900/90 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
-                    <div className="flex justify-between items-start mb-6">
-                      <div>
-                        <h3 className="text-4xl font-bold text-white mb-2">{selectedProject.title}</h3>
-                        <div className={`text-lg ${getCategoryTheme(selectedProject.category).color}`}>
-                          {selectedProject.category}
-                        </div>
-                      </div>
-                      <button
-                        onClick={closeProject}
-                        className="text-gray-400 hover:text-white text-2xl"
-                      >
-                        ×
-                      </button>
-                    </div>
-
-                    <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                      {selectedProject.description}
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div>
-                        <h4 className="text-xl font-semibold text-white mb-3">Technology Stack</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedProject.techStack.map((tech, index) => (
-                            <span
-                              key={index}
-                              className="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-full border border-blue-400/30"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="text-xl font-semibold text-white mb-3">Impact & Results</h4>
-                        <p className="text-gray-300">{selectedProject.impact}</p>
-                        
-                        {selectedProject.awards && (
-                          <div className="mt-4">
-                            <h5 className="text-lg font-medium text-yellow-400 mb-2">Awards</h5>
-                            {selectedProject.awards.map((award, index) => (
-                              <div key={index} className="text-yellow-300">{award}</div>
-                            ))}
+                {/* Content Area */}
+                <div className="p-6 h-96 overflow-y-auto custom-scrollbar">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeSection}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="h-full"
+                    >
+                      {activeSection === 'overview' && (
+                        <div className="space-y-6">
+                          <div>
+                            <h3 className="text-xl font-semibold text-white mb-3">Project Description</h3>
+                            <p className="text-gray-300 text-lg leading-relaxed">
+                              {selectedProject.description}
+                            </p>
                           </div>
-                        )}
-                      </div>
-                    </div>
+                          
+                          {selectedProject.awards && selectedProject.awards.length > 0 && (
+                            <div>
+                              <h3 className="text-xl font-semibold text-white mb-3">Recognition</h3>
+                              <div className="space-y-2">
+                                {selectedProject.awards.map((award, index) => (
+                                  <motion.div
+                                    key={index}
+                                    className="flex items-center space-x-2 p-3 bg-yellow-900/20 border border-yellow-400/30 rounded-lg"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                  >
+                                    <Award className="w-5 h-5 text-yellow-400" />
+                                    <span className="text-yellow-300">{award}</span>
+                                  </motion.div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
 
-                    <div className="flex space-x-4 mt-8">
-                      {selectedProject.githubUrl && (
-                        <a
-                          href={selectedProject.githubUrl}
-                          className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                        >
-                          <Github className="w-5 h-5" />
-                          <span>View Code</span>
-                        </a>
+                      {activeSection === 'technical' && (
+                        <div className="space-y-6">
+                          <div>
+                            <h3 className="text-xl font-semibold text-white mb-4">Technology Stack</h3>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                              {selectedProject.techStack.map((tech, index) => (
+                                <motion.div
+                                  key={index}
+                                  className={`p-3 text-center rounded-lg ${getCategoryTheme(selectedProject.category).bg} ${getCategoryTheme(selectedProject.category).border} border backdrop-blur-sm`}
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: index * 0.1 }}
+                                  whileHover={{ scale: 1.05, y: -2 }}
+                                >
+                                  <span className={`text-sm font-medium ${getCategoryTheme(selectedProject.category).color}`}>{tech}</span>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <h3 className="text-xl font-semibold text-white mb-3">Architecture Overview</h3>
+                            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                              <p className="text-gray-300">
+                                This project leverages a modern tech stack with {selectedProject.techStack.join(', ')} to deliver 
+                                scalable and efficient solutions. The architecture emphasizes performance, maintainability, 
+                                and user experience.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       )}
-                      {selectedProject.demoUrl && (
-                        <a
-                          href={selectedProject.demoUrl}
-                          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-                        >
-                          <ExternalLink className="w-5 h-5" />
-                          <span>Live Demo</span>
-                        </a>
+
+                      {activeSection === 'impact' && (
+                        <div className="space-y-6">
+                          <div>
+                            <h3 className="text-xl font-semibold text-white mb-3">Impact & Results</h3>
+                            <div className={`p-6 rounded-xl ${getCategoryTheme(selectedProject.category).bg} ${getCategoryTheme(selectedProject.category).border} border backdrop-blur-sm`}>
+                              <p className={`text-lg ${getCategoryTheme(selectedProject.category).color} font-medium`}>
+                                {selectedProject.impact}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                              <h4 className="text-lg font-semibold text-white mb-2">Problem Solved</h4>
+                              <p className="text-gray-300">
+                                Addressing real-world challenges through innovative technology solutions
+                                that create measurable positive outcomes.
+                              </p>
+                            </div>
+
+                            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                              <h4 className="text-lg font-semibold text-white mb-2">Future Potential</h4>
+                              <p className="text-gray-300">
+                                This solution has the potential to scale and adapt to similar challenges
+                                across different domains and use cases.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       )}
-                    </div>
-                  </div>
-                </motion.div>
+
+                      {activeSection === 'showcase' && (
+                        <div className="space-y-6">
+                          {selectedProject.images && selectedProject.images.length > 0 ? (
+                            <div>
+                              <h3 className="text-xl font-semibold text-white mb-4">Project Gallery</h3>
+                              <div className="relative">
+                                <motion.img
+                                  key={currentImageIndex}
+                                  src={selectedProject.images[currentImageIndex]}
+                                  alt={`${selectedProject.title} screenshot ${currentImageIndex + 1}`}
+                                  className="w-full h-64 object-cover rounded-lg border border-gray-700"
+                                  initial={{ opacity: 0, scale: 0.9 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ duration: 0.3 }}
+                                />
+                                
+                                {selectedProject.images.length > 1 && (
+                                  <>
+                                    <button
+                                      onClick={prevImage}
+                                      className="absolute left-2 top-1/2 transform -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                                    >
+                                      <ChevronLeft className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                      onClick={nextImage}
+                                      className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                                    >
+                                      <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                              
+                              {selectedProject.images.length > 1 && (
+                                <div className="flex justify-center space-x-2 mt-4">
+                                  {selectedProject.images.map((_, index) => (
+                                    <button
+                                      key={index}
+                                      onClick={() => setCurrentImageIndex(index)}
+                                      className={`w-3 h-3 rounded-full transition-colors ${
+                                        index === currentImageIndex 
+                                          ? getCategoryTheme(selectedProject.category).color.replace('text-', 'bg-') 
+                                          : 'bg-gray-600'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="text-center py-12">
+                              <div className="text-gray-400 text-lg mb-4">Visual assets coming soon</div>
+                              <p className="text-gray-500">Screenshots and demos will be added to showcase this project</p>
+                            </div>
+                          )}
+
+                          <div>
+                            <h3 className="text-xl font-semibold text-white mb-3">Live Links</h3>
+                            <div className="flex flex-wrap gap-4">
+                              {selectedProject.githubUrl && (
+                                <motion.a
+                                  href={selectedProject.githubUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center space-x-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors border border-gray-600"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <Github className="w-5 h-5" />
+                                  <span>View Source Code</span>
+                                  <ArrowRight className="w-4 h-4" />
+                                </motion.a>
+                              )}
+                              
+                              {selectedProject.demoUrl && (
+                                <motion.a
+                                  href={selectedProject.demoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`flex items-center space-x-2 px-6 py-3 bg-gradient-to-r ${getCategoryTheme(selectedProject.category).gradient} hover:opacity-90 rounded-lg transition-opacity text-white font-medium`}
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <ExternalLink className="w-5 h-5" />
+                                  <span>Live Demo</span>
+                                  <ArrowRight className="w-4 h-4" />
+                                </motion.a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               </motion.div>
-            </>
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
+
+      {/* Custom Scrollbar Styles */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+      `}</style>
     </div>
   );
 };
