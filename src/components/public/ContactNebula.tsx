@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Linkedin, Github, Calendar, MessageCircle, Send, Star } from 'lucide-react';
+import { Mail, Linkedin, Github, Calendar, Download, Award, ExternalLink, FileText, GraduationCap, Building } from 'lucide-react';
 
 export const ContactNebula: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-    type: 'collaboration'
-  });
+  const [downloadStatus, setDownloadStatus] = useState<string>('');
 
   const contactOptions = [
     {
@@ -49,6 +44,45 @@ export const ContactNebula: React.FC = () => {
     }
   ];
 
+  const certificates = [
+    {
+      id: 'aiesec',
+      title: 'AIESEC Leadership',
+      description: 'Global volunteer and leadership certificates',
+      icon: Award,
+      color: 'from-orange-400 to-red-400',
+      bgColor: 'bg-orange-900/20 border-orange-400/30',
+      count: '3 Certificates'
+    },
+    {
+      id: 'internships',
+      title: 'Professional Experience',
+      description: 'Internship completion and recommendation letters',
+      icon: Building,
+      color: 'from-purple-400 to-pink-400',
+      bgColor: 'bg-purple-900/20 border-purple-400/30',
+      count: '5 Documents'
+    },
+    {
+      id: 'online',
+      title: 'Online Certifications',
+      description: 'AI, DevOps, and technical skill certifications',
+      icon: GraduationCap,
+      color: 'from-green-400 to-teal-400',
+      bgColor: 'bg-green-900/20 border-green-400/30',
+      count: '12+ Certificates'
+    },
+    {
+      id: 'academic',
+      title: 'Academic Records',
+      description: 'University transcripts and degrees',
+      icon: FileText,
+      color: 'from-blue-400 to-indigo-400',
+      bgColor: 'bg-blue-900/20 border-blue-400/30',
+      count: 'Official Transcripts'
+    }
+  ];
+
   const handleContactClick = (option: any) => {
     if (option.id === 'calendar') {
       // Future: Implement calendar booking
@@ -58,12 +92,21 @@ export const ContactNebula: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({ name: '', email: '', message: '', type: 'collaboration' });
+  const handleDownloadCV = () => {
+    setDownloadStatus('Downloading...');
+    // Simulate download
+    setTimeout(() => {
+      setDownloadStatus('Downloaded!');
+      setTimeout(() => setDownloadStatus(''), 2000);
+    }, 1000);
+    
+    // Here you would implement actual CV download
+    // window.open('/cv/selma-bettaieb-cv.pdf', '_blank');
+  };
+
+  const handleCertificateClick = (cert: any) => {
+    // Future: Implement certificate viewing/download
+    alert(`Opening ${cert.title} certificates...`);
   };
 
   const containerVariants = {
@@ -135,8 +178,19 @@ export const ContactNebula: React.FC = () => {
                   <div className={`absolute inset-0 bg-gradient-to-br ${option.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                   
                   <div className="relative z-10 flex items-center space-x-3 sm:space-x-4">
-                    <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-br ${option.color} text-white flex-shrink-0`}>
-                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                    {/* Profile Photo */}
+                    <div className="relative flex-shrink-0">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-white/20">
+                        <img 
+                          src="/photo.jpg" 
+                          alt="Selma Bettaieb" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      {/* Icon Overlay */}
+                      <div className={`absolute -bottom-1 -right-1 p-1 sm:p-1.5 rounded-full bg-gradient-to-br ${option.color} text-white`}>
+                        <IconComponent className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </div>
                     </div>
                     
                     <div className="flex-1 min-w-0">
@@ -149,7 +203,7 @@ export const ContactNebula: React.FC = () => {
                     </div>
                     
                     <div className="text-gray-400 group-hover:text-white transition-colors flex-shrink-0">
-                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                   </div>
 
@@ -181,139 +235,128 @@ export const ContactNebula: React.FC = () => {
             })}
           </motion.div>
 
-          {/* Embedded Contact Card */}
+          {/* Download CV & Certificates */}
           <motion.div
             className="space-y-6"
             variants={itemVariants}
           >
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center lg:text-left px-4 lg:px-0">
-              Quick Message Portal
+              Download CV & Certificates
             </h3>
             
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8 mx-4 lg:mx-0">
-              <form onSubmit={handleFormSubmit} className="space-y-4 sm:space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                      Your Name
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors text-sm sm:text-base"
-                      placeholder="Enter your name"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors text-sm sm:text-base"
-                      placeholder="your.email@example.com"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Project Type
-                  </label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-purple-400 transition-colors text-sm sm:text-base"
-                  >
-                    <option value="collaboration">AI/Tech Collaboration</option>
-                    <option value="volunteer">Volunteer Opportunity</option>
-                    <option value="consulting">Consulting Project</option>
-                    <option value="speaking">Speaking Engagement</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    rows={4}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors resize-none text-sm sm:text-base"
-                    placeholder="Tell me about your project, idea, or how we can work together..."
-                    required
-                  />
-                </div>
-
-                <motion.button
-                  type="submit"
-                  className="w-full py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Send Message to the Universe</span>
-                </motion.button>
-              </form>
+            {/* Download CV Card */}
+            <motion.div
+              className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 border border-indigo-400/40 rounded-2xl p-6 mx-4 lg:mx-0 cursor-pointer group overflow-hidden relative"
+              whileHover={{ scale: 1.02, y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleDownloadCV}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
-              {/* Social Links at Bottom */}
-              <div className="mt-6 pt-6 border-t border-white/10">
-                <p className="text-gray-400 text-sm text-center mb-4">Or connect with me directly:</p>
-                <div className="flex justify-center space-x-4">
-                  <a href="https://github.com/sambett" target="_blank" rel="noopener noreferrer" 
-                     className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-                    <Github className="w-5 h-5 text-gray-400 hover:text-white" />
-                  </a>
-                  <a href="https://linkedin.com/in/selma-bettaieb" target="_blank" rel="noopener noreferrer"
-                     className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-                    <Linkedin className="w-5 h-5 text-gray-400 hover:text-white" />
-                  </a>
-                  <a href="mailto:selma.bettaieb@example.com" 
-                     className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
-                    <Mail className="w-5 h-5 text-gray-400 hover:text-white" />
-                  </a>
+              <div className="relative z-10 flex items-center space-x-4">
+                {/* Profile Photo with Download Icon */}
+                <div className="relative flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-indigo-400/50">
+                    <img 
+                      src="/photo.jpg" 
+                      alt="Selma Bettaieb" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 p-2 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 text-white">
+                    <Download className="w-4 h-4" />
+                  </div>
+                </div>
+                
+                <div className="flex-1">
+                  <h4 className="text-2xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-indigo-300">
+                    Download My CV
+                  </h4>
+                  <p className="text-gray-300 text-sm mb-3">
+                    Get my latest resume with projects, experience, and achievements
+                  </p>
+                  <div className="text-indigo-400 text-sm font-medium">
+                    {downloadStatus || 'PDF Format • Updated June 2025'}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+            
+            {/* Certificates Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mx-4 lg:mx-0">
+              {certificates.map((cert) => {
+                const IconComponent = cert.icon;
+                
+                return (
+                  <motion.div
+                    key={cert.id}
+                    className={`relative p-4 rounded-xl ${cert.bgColor} border backdrop-blur-sm cursor-pointer group overflow-hidden`}
+                    whileHover={{ scale: 1.05, y: -3 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleCertificateClick(cert)}
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                    
+                    <div className="relative z-10">
+                      {/* Profile Photo with Certificate Icon */}
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="relative flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20">
+                            <img 
+                              src="/photo.jpg" 
+                              alt="Selma Bettaieb" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className={`absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br ${cert.color} text-white`}>
+                            <IconComponent className="w-2.5 h-2.5" />
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h5 className="text-white font-semibold text-sm group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-300 truncate">
+                            {cert.title}
+                          </h5>
+                          <p className="text-xs text-gray-400">
+                            {cert.count}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-300 text-xs line-clamp-2 mb-2">
+                        {cert.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className={`text-xs font-medium bg-gradient-to-r ${cert.color} bg-clip-text text-transparent`}>
+                          View All
+                        </div>
+                        <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-white transition-colors" />
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 mx-4 lg:mx-0">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-indigo-400">20+</div>
+                  <div className="text-xs text-gray-400">Total Certificates</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-purple-400">4</div>
+                  <div className="text-xs text-gray-400">Countries</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-pink-400">3+</div>
+                  <div className="text-xs text-gray-400">Years Experience</div>
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
-
-        {/* Fun Stats */}
-        <motion.div
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center"
-          variants={itemVariants}
-        >
-          {[
-            { icon: MessageCircle, value: "24h", label: "Average Response Time" },
-            { icon: Star, value: "3+", label: "Continents Connected" },
-            { icon: Calendar, value: "Open", label: "For New Projects" },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              className="space-y-3"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="relative mx-auto w-16 h-16">
-                <stat.icon className="w-8 h-8 mx-auto text-purple-400" />
-                <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-purple-400/30"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                />
-              </div>
-              <div className="text-3xl font-bold text-white">{stat.value}</div>
-              <div className="text-gray-400">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
 
         {/* Footer Quote */}
         <motion.div
