@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Home, Briefcase, Globe, MessageCircle } from 'lucide-react';
+import { ChevronUp, ChevronDown, Home, Briefcase, Globe, MessageCircle } from 'lucide-react';
 
 interface NavigationProps {
   currentSection: number;
@@ -10,6 +10,7 @@ interface NavigationProps {
 
 export const Navigation: React.FC<NavigationProps> = ({
   currentSection,
+  totalSections,
   onSectionChange,
 }) => {
   const navItems = [
@@ -18,6 +19,18 @@ export const Navigation: React.FC<NavigationProps> = ({
     { id: 2, icon: Globe, label: 'Global Impact', color: 'text-green-400' },
     { id: 3, icon: MessageCircle, label: 'Contact', color: 'text-pink-400' },
   ];
+
+  const goToPrevSection = () => {
+    if (currentSection > 0) {
+      onSectionChange(currentSection - 1);
+    }
+  };
+
+  const goToNextSection = () => {
+    if (currentSection < totalSections - 1) {
+      onSectionChange(currentSection + 1);
+    }
+  };
 
   return (
     <>
@@ -42,7 +55,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
           </motion.div>
 
-          {/* Navigation Menu */}
+          {/* Navigation Menu - Desktop */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => {
               const IconComponent = item.icon;
@@ -68,24 +81,65 @@ export const Navigation: React.FC<NavigationProps> = ({
               );
             })}
           </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <motion.button
-              className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20"
-              whileTap={{ scale: 0.9 }}
-            >
-              <div className="w-6 h-6 flex flex-col justify-center space-y-1">
-                <div className="w-6 h-0.5 bg-white"></div>
-                <div className="w-6 h-0.5 bg-white"></div>
-                <div className="w-6 h-0.5 bg-white"></div>
-              </div>
-            </motion.button>
-          </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Navigation Menu */}
+      {/* Left Side Arrow Navigation - Positioned Left to Avoid Star */}
+      <motion.div
+        className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 space-y-4"
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 1.5, duration: 0.8 }}
+      >
+        {/* Up Arrow */}
+        <motion.button
+          onClick={goToPrevSection}
+          disabled={currentSection === 0}
+          className={`w-12 h-12 rounded-full backdrop-blur-md border flex items-center justify-center transition-all duration-300 ${
+            currentSection === 0
+              ? 'bg-white/5 border-white/10 text-gray-600 cursor-not-allowed'
+              : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-110'
+          }`}
+          whileHover={currentSection > 0 ? { scale: 1.1 } : {}}
+          whileTap={currentSection > 0 ? { scale: 0.9 } : {}}
+        >
+          <ChevronUp className="w-6 h-6" />
+        </motion.button>
+
+        {/* Section Indicator */}
+        <div className="flex flex-col items-center space-y-2">
+          {Array.from({ length: totalSections }).map((_, index) => (
+            <motion.button
+              key={index}
+              onClick={() => onSectionChange(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                currentSection === index
+                  ? 'bg-gradient-to-r from-purple-400 to-cyan-400 scale-125'
+                  : 'bg-white/30 hover:bg-white/50'
+              }`}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.8 }}
+            />
+          ))}
+        </div>
+
+        {/* Down Arrow */}
+        <motion.button
+          onClick={goToNextSection}
+          disabled={currentSection === totalSections - 1}
+          className={`w-12 h-12 rounded-full backdrop-blur-md border flex items-center justify-center transition-all duration-300 ${
+            currentSection === totalSections - 1
+              ? 'bg-white/5 border-white/10 text-gray-600 cursor-not-allowed'
+              : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-110'
+          }`}
+          whileHover={currentSection < totalSections - 1 ? { scale: 1.1 } : {}}
+          whileTap={currentSection < totalSections - 1 ? { scale: 0.9 } : {}}
+        >
+          <ChevronDown className="w-6 h-6" />
+        </motion.button>
+      </motion.div>
+
+      {/* Mobile Navigation Menu - Positioned Right */}
       <motion.div
         className="fixed top-20 right-6 z-40 md:hidden"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -116,41 +170,6 @@ export const Navigation: React.FC<NavigationProps> = ({
             );
           })}
         </div>
-      </motion.div>
-
-      {/* Floating Action Buttons - Quick Actions */}
-      <motion.div
-        className="fixed bottom-6 left-6 z-40 space-y-3"
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ delay: 2, duration: 0.8 }}
-      >
-        {[
-          { icon: MessageCircle, action: () => onSectionChange(3), color: 'from-pink-500 to-purple-500', label: 'Contact' },
-          { icon: Briefcase, action: () => onSectionChange(1), color: 'from-blue-500 to-cyan-500', label: 'Projects' },
-        ].map((action, index) => (
-          <motion.button
-            key={index}
-            onClick={action.action}
-            className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group relative`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <action.icon className="w-6 h-6 text-white" />
-            
-            {/* Tooltip */}
-            <div className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-black/80 text-white px-3 py-1 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-              {action.label}
-            </div>
-
-            {/* Ripple Effect */}
-            <motion.div
-              className="absolute inset-0 rounded-full border-2 border-white/30"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.button>
-        ))}
       </motion.div>
     </>
   );
