@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminApi } from '../utils/api';
+import { adminApi, isBackendAvailable } from '../utils/api';
 import { AuthState } from '../types';
 
 export const useAuth = (): AuthState & {
@@ -17,6 +17,12 @@ export const useAuth = (): AuthState & {
 
   const checkAuth = async () => {
     try {
+      // If backend is not available, don't attempt auth check
+      if (!isBackendAvailable()) {
+        setAuthState({ user: null, loading: false, isAuthenticated: false });
+        return;
+      }
+
       // Check if we have a token in localStorage
       const token = localStorage.getItem('adminToken');
       if (!token) {
@@ -86,11 +92,13 @@ export const useAuth = (): AuthState & {
     }
   };
 
-  // Only check auth if we have a token
+  // Only check auth if we have a token and backend is available
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-      checkAuth();
+    if (isBackendAvailable()) {
+      const token = localStorage.getItem('adminToken');
+      if (token) {
+        checkAuth();
+      }
     }
   }, []);
 

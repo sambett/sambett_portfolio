@@ -26,6 +26,13 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Check if we're in production (static mode) or development
+const isProduction = !import.meta.env.DEV || window.location.hostname !== 'localhost';
+const isBackendAvailable = () => {
+  // Backend is available in development mode (localhost)
+  return import.meta.env.DEV && window.location.hostname === 'localhost';
+};
+
 // Response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
@@ -34,8 +41,12 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-      console.error('❌ Network Error! Check if backend is running and Vite proxy is working');
-      console.error('💡 Make sure backend is on port 3002: cd backend && npm run dev');
+      if (isBackendAvailable()) {
+        console.error('❌ Network Error! Check if backend is running and Vite proxy is working');
+        console.error('💡 Make sure backend is on port 3002: cd backend && npm run dev');
+      } else {
+        console.log('ℹ️ Backend not available in production mode - admin features disabled');
+      }
     } else {
       console.error('❌ API Error:', error.response?.status, error.response?.data || error.message);
     }
@@ -71,35 +82,74 @@ export const contactApi = {
     api.post('/api/contact', data).then(res => res.data),
 };
 
-// Admin API endpoints
+// Admin API endpoints with graceful fallback
 export const adminApi = {
-  login: (password: string): Promise<{ success: boolean; message: string; token: string }> =>
-    api.post('/admin/login', { password }).then(res => res.data),
+  login: (password: string): Promise<{ success: boolean; message: string; token: string }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features are not available in production. This portfolio is designed to work as a static site.'));
+    }
+    return api.post('/admin/login', { password }).then(res => res.data);
+  },
   
-  logout: (): Promise<{ success: boolean; message: string }> =>
-    api.post('/admin/logout').then(res => res.data),
+  logout: (): Promise<{ success: boolean; message: string }> => {
+    if (!isBackendAvailable()) {
+      return Promise.resolve({ success: true, message: 'Logged out locally' });
+    }
+    return api.post('/admin/logout').then(res => res.data);
+  },
   
-  checkAuth: (): Promise<{ authenticated: boolean; admin: { username: string } }> =>
-    api.get('/admin/status').then(res => res.data),
+  checkAuth: (): Promise<{ authenticated: boolean; admin: { username: string } }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Backend not available'));
+    }
+    return api.get('/admin/status').then(res => res.data);
+  },
   
-  getProjects: (): Promise<{ projects: Project[] }> =>
-    api.get('/api/admin/projects').then(res => res.data),
+  getProjects: (): Promise<{ projects: Project[] }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features require local development environment'));
+    }
+    return api.get('/api/admin/projects').then(res => res.data);
+  },
   
-  createProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<{ success: boolean; project: Project }> =>
-    api.post('/api/admin/projects', project).then(res => res.data),
+  createProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<{ success: boolean; project: Project }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features require local development environment'));
+    }
+    return api.post('/api/admin/projects', project).then(res => res.data);
+  },
   
-  updateProject: (id: string, project: Partial<Project>): Promise<{ success: boolean; project: Project }> =>
-    api.put(`/api/admin/projects/${id}`, project).then(res => res.data),
+  updateProject: (id: string, project: Partial<Project>): Promise<{ success: boolean; project: Project }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features require local development environment'));
+    }
+    return api.put(`/api/admin/projects/${id}`, project).then(res => res.data);
+  },
   
-  deleteProject: (id: string): Promise<{ success: boolean }> =>
-    api.delete(`/api/admin/projects/${id}`).then(res => res.data),
+  deleteProject: (id: string): Promise<{ success: boolean }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features require local development environment'));
+    }
+    return api.delete(`/api/admin/projects/${id}`).then(res => res.data);
+  },
   
-  getStats: (): Promise<{ stats: AdminStats }> =>
-    api.get('/api/admin/stats').then(res => res.data),
+  getStats: (): Promise<{ stats: AdminStats }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features require local development environment'));
+    }
+    return api.get('/api/admin/stats').then(res => res.data);
+  },
   
-  reorderProjects: (projectIds: string[]): Promise<{ success: boolean }> =>
-    api.post('/api/admin/reorder', { projectIds }).then(res => res.data),
+  reorderProjects: (projectIds: string[]): Promise<{ success: boolean }> => {
+    if (!isBackendAvailable()) {
+      return Promise.reject(new Error('Admin features require local development environment'));
+    }
+    return api.post('/api/admin/reorder', { projectIds }).then(res => res.data);
+  },
 };
+
+// Export backend availability check
+export { isBackendAvailable };
 
 export { api };
 export default api;

@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Lock, User, Eye, EyeOff, Shield, AlertCircle, CheckCircle } from 'lucide-react'
+import { Lock, User, Eye, EyeOff, Shield, AlertCircle, CheckCircle, Server, Home } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
+import { isBackendAvailable } from '../utils/api'
 
 export const AdminLogin = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +12,24 @@ export const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'available' | 'unavailable'>('checking')
   
   const { login } = useAuth()
+
+  // Check backend availability on component mount
+  useEffect(() => {
+    const checkBackend = () => {
+      if (isBackendAvailable()) {
+        setBackendStatus('available')
+      } else {
+        setBackendStatus('unavailable')
+        setError('Admin features are only available in development mode. This portfolio works perfectly as a static site without a backend!')
+      }
+    }
+
+    // Small delay to show checking state
+    setTimeout(checkBackend, 500)
+  }, [])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -21,6 +38,12 @@ export const AdminLogin = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (backendStatus === 'unavailable') {
+      // Redirect to portfolio if backend is not available
+      window.location.href = '/'
+      return
+    }
     
     if (!formData.username || !formData.password) {
       setError('Please fill in all fields')
@@ -154,11 +177,11 @@ export const AdminLogin = () => {
             {/* Submit Button */}
             <motion.button
               type="submit"
-              disabled={isLoading}
-              whileHover={{ scale: isLoading ? 1 : 1.02 }}
-              whileTap={{ scale: isLoading ? 1 : 0.98 }}
+              disabled={isLoading || backendStatus !== 'available'}
+              whileHover={{ scale: (isLoading || backendStatus !== 'available') ? 1 : 1.02 }}
+              whileTap={{ scale: (isLoading || backendStatus !== 'available') ? 1 : 0.98 }}
               className={`w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-slate-800 ${
-                isLoading
+                isLoading || backendStatus !== 'available'
                   ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                   : 'bg-primary-500 hover:bg-primary-600 text-white shadow-lg hover:shadow-xl'
               }`}
@@ -167,6 +190,11 @@ export const AdminLogin = () => {
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-400"></div>
                   <span>Signing in...</span>
+                </>
+              ) : backendStatus === 'unavailable' ? (
+                <>
+                  <Home size={18} />
+                  <span>Return to Portfolio</span>
                 </>
               ) : (
                 <>
@@ -202,23 +230,59 @@ export const AdminLogin = () => {
           </a>
         </motion.div>
 
-        {/* Demo Credentials Notice (Remove in production) */}
-        <motion.div 
-          variants={itemVariants}
-          className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4"
-        >
-          <div className="flex items-start space-x-3">
-            <AlertCircle size={16} className="mt-0.5 flex-shrink-0 text-amber-400" />
-            <div className="text-sm text-amber-300">
-              <p className="font-medium mb-1">Demo Environment</p>
-              <p>For demo purposes, you can use:</p>
-              <div className="mt-2 font-mono text-xs bg-slate-900/50 p-2 rounded border border-slate-700">
-                <div>Username: admin</div>
-                <div>Password: selma2024</div>
+        {/* Backend Status Notice */}
+        {backendStatus === 'checking' && (
+          <motion.div 
+            variants={itemVariants}
+            className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4"
+          >
+            <div className="flex items-start space-x-3">
+              <Server size={16} className="mt-0.5 flex-shrink-0 text-blue-400 animate-pulse" />
+              <div className="text-sm text-blue-300">
+                <p className="font-medium mb-1">Checking Backend Status</p>
+                <p>Verifying admin features availability...</p>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
+
+        {backendStatus === 'unavailable' && (
+          <motion.div 
+            variants={itemVariants}
+            className="bg-green-500/10 border border-green-500/20 rounded-lg p-4"
+          >
+            <div className="flex items-start space-x-3">
+              <CheckCircle size={16} className="mt-0.5 flex-shrink-0 text-green-400" />
+              <div className="text-sm text-green-300">
+                <p className="font-medium mb-1">Static Portfolio Mode</p>
+                <p>This portfolio is running perfectly as a static site! Admin features are only available during local development.</p>
+                <div className="mt-3 flex items-center space-x-2">
+                  <Home size={14} />
+                  <a href="/" className="text-green-400 hover:text-green-300 transition-colors font-medium">← Back to Portfolio</a>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {backendStatus === 'available' && (
+          <motion.div 
+            variants={itemVariants}
+            className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4"
+          >
+            <div className="flex items-start space-x-3">
+              <AlertCircle size={16} className="mt-0.5 flex-shrink-0 text-amber-400" />
+              <div className="text-sm text-amber-300">
+                <p className="font-medium mb-1">Development Environment</p>
+                <p>Admin features are available. Demo credentials:</p>
+                <div className="mt-2 font-mono text-xs bg-slate-900/50 p-2 rounded border border-slate-700">
+                  <div>Username: admin</div>
+                  <div>Password: selma2024</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   )

@@ -11,14 +11,41 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    host: true, // Allow external connections
     proxy: {
+      // Proxy all /api requests to backend
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3002',
         changeOrigin: true,
+        secure: false,
+        configure: (proxy, options) => {
+          proxy.on('error', (err, req, res) => {
+            console.log('❌ Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            console.log('🚀 Proxying:', req.method, req.url, '→', options.target);
+          });
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            console.log('✅ Proxy response:', proxyRes.statusCode, req.url);
+          });
+        }
       },
+      // Proxy all /admin requests to backend
       '/admin': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3002',
         changeOrigin: true,
+        secure: false,
+        configure: (proxy, options) => {
+          proxy.on('error', (err, req, res) => {
+            console.log('❌ Admin proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            console.log('🔐 Admin proxying:', req.method, req.url, '→', options.target);
+          });
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            console.log('✅ Admin proxy response:', proxyRes.statusCode, req.url);
+          });
+        }
       }
     }
   },
