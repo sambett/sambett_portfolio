@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Briefcase, Globe, MessageCircle, Menu, X, Brain, Sparkles, Users } from 'lucide-react';
+import { Home, Briefcase, Globe, MessageCircle, Menu, X, Brain, Users } from 'lucide-react';
 
 interface NavigationProps {
   currentSection: number;
@@ -18,9 +18,8 @@ export const Navigation: React.FC<NavigationProps> = ({
     { id: 0, icon: Home, label: 'Identity', color: 'text-purple-400' },
     { id: 1, icon: Brain, label: 'Skills', color: 'text-indigo-400' },
     { id: 2, icon: Briefcase, label: 'Projects', color: 'text-blue-400' },
-    { id: 3, icon: Sparkles, label: 'Cultural Bridge', color: 'text-emerald-400' },
-    { id: 4, icon: Globe, label: 'Global Impact', color: 'text-green-400' },
-    { id: 5, icon: MessageCircle, label: 'Contact', color: 'text-pink-400' },
+    { id: 3, icon: Globe, label: 'Global Impact', color: 'text-emerald-400' },
+    { id: 4, icon: MessageCircle, label: 'Contact', color: 'text-pink-400' },
   ];
 
   const handleMobileNavigation = (sectionId: number) => {
@@ -178,7 +177,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         transition={{ delay: 2, duration: 0.8 }}
       >
         {[
-          { icon: MessageCircle, action: () => { onSectionChange(5); setIsMobileMenuOpen(false); }, color: 'from-pink-500 to-purple-500', label: 'Contact' },
+          { icon: MessageCircle, action: () => { onSectionChange(4); setIsMobileMenuOpen(false); }, color: 'from-pink-500 to-purple-500', label: 'Contact' },
           { icon: Briefcase, action: () => { onSectionChange(2); setIsMobileMenuOpen(false); }, color: 'from-blue-500 to-cyan-500', label: 'Projects' },
         ].map((action, index) => (
           <motion.button
