@@ -247,28 +247,62 @@ export const ProjectUniverse: React.FC = () => {
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
               >
-                {/* Multi-layered Cosmic Background */}
+                {/* Enhanced Multi-layered Cosmic Background */}
                 <div className="absolute inset-0">
-                  {/* Base gradient instead of solid black */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+                  {/* Base cosmic gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-black" />
                   
-                  {/* Subtle project-themed gradient overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryTheme(selectedProject.category).gradient} opacity-5`} />
+                  {/* Project-themed gradient overlay */}
+                  <div 
+                    className="absolute inset-0 opacity-8"
+                    style={{
+                      background: `radial-gradient(circle at 30% 40%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 50%), radial-gradient(circle at 70% 60%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 0%, transparent 50%)`
+                    }}
+                  />
                   
-                  {/* Animated cosmic particles */}
+                  {/* Twinkling stars */}
                   <div className="absolute inset-0">
-                    {[...Array(50)].map((_, i) => (
+                    {[...Array(100)].map((_, i) => (
                       <motion.div
                         key={i}
-                        className="absolute w-px h-px bg-white rounded-full"
+                        className="absolute bg-white rounded-full"
+                        style={{
+                          width: Math.random() * 2 + 1 + 'px',
+                          height: Math.random() * 2 + 1 + 'px',
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
                         animate={{
-                          opacity: [0, 1, 0],
+                          opacity: [0.2, 1, 0.2],
+                          scale: [0.5, 1.2, 0.5],
+                        }}
+                        transition={{
+                          duration: Math.random() * 3 + 2,
+                          repeat: Infinity,
+                          delay: Math.random() * 5,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Floating cosmic dust */}
+                  <div className="absolute inset-0">
+                    {[...Array(30)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className={`absolute w-1 h-1 rounded-full ${getCategoryTheme(selectedProject.category).color.replace('text-', 'bg-')}`}
+                        animate={{
+                          x: [0, Math.random() * 200 - 100],
+                          y: [0, Math.random() * 200 - 100],
+                          opacity: [0, 0.6, 0],
                           scale: [0, 1, 0],
                         }}
                         transition={{
-                          duration: Math.random() * 4 + 2,
+                          duration: Math.random() * 8 + 5,
                           repeat: Infinity,
                           delay: Math.random() * 3,
+                          ease: "easeInOut",
                         }}
                         style={{
                           left: `${Math.random() * 100}%`,
@@ -278,45 +312,49 @@ export const ProjectUniverse: React.FC = () => {
                     ))}
                   </div>
                   
-                  {/* Subtle animated nebula effect */}
+                  {/* Animated nebula clouds */}
                   <motion.div
-                    className={`absolute top-1/4 left-1/3 w-96 h-96 bg-gradient-radial ${getCategoryTheme(selectedProject.category).gradient} opacity-3 rounded-full blur-3xl`}
+                    className="absolute inset-0"
+                    style={{
+                      background: `radial-gradient(ellipse at 25% 30%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-500')} 0%, transparent 40%), radial-gradient(ellipse at 75% 70%, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 50%)`
+                    }}
                     animate={{
-                      scale: [1, 1.3, 1],
-                      opacity: [0.02, 0.05, 0.02],
-                      x: [-50, 50, -50],
+                      opacity: [0.05, 0.15, 0.05],
+                      scale: [1, 1.1, 1],
                     }}
                     transition={{
-                      duration: 8,
+                      duration: 12,
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
                   />
                   
+                  {/* Subtle rotating galaxy arms */}
                   <motion.div
-                    className={`absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-radial ${getCategoryTheme(selectedProject.category).gradient} opacity-2 rounded-full blur-3xl`}
-                    animate={{
-                      scale: [1.2, 1, 1.2],
-                      opacity: [0.01, 0.04, 0.01],
-                      x: [30, -30, 30],
-                    }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 3,
+                    className="absolute inset-0 opacity-10"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                    style={{
+                      background: `conic-gradient(from 0deg, transparent 0deg, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 45deg, transparent 90deg, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-300')} 225deg, transparent 270deg)`,
+                      maskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
+                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 40%, black 70%, transparent 100%)',
                     }}
                   />
-
-                  {/* Project-specific spiral effect (more subtle) */}
+                  
+                  {/* Pulsing central glow */}
                   <motion.div
-                    className="absolute inset-0 opacity-60"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/2 left-1/2 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
                     style={{
-                      background: `conic-gradient(from 0deg, transparent 0deg, ${getCategoryTheme(selectedProject.category).gradient.split(' ')[1]} 180deg, transparent 360deg)`,
-                      maskImage: 'radial-gradient(circle at center, transparent 60%, black 100%)',
-                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 60%, black 100%)',
+                      background: `radial-gradient(circle, ${getCategoryTheme(selectedProject.category).color.replace('text-', '').replace('-400', '-400')} 0%, transparent 70%)`
+                    }}
+                    animate={{
+                      scale: [0.8, 1.2, 0.8],
+                      opacity: [0.1, 0.3, 0.1],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
                     }}
                   />
                 </div>
