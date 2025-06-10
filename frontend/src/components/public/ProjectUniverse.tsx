@@ -120,9 +120,166 @@ export const ProjectUniverse: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Spider Web Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Subtle Darkening Overlay */}
+        <div className="absolute inset-0 bg-black/20" />
+        
+        {/* Main Web Structure */}
+        <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="webGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.6" />
+              <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.1" />
+            </radialGradient>
+          </defs>
+          
+          {/* Central Hub */}
+          <circle cx="600" cy="400" r="4" fill="url(#webGradient)" />
+          
+          {/* Radial Lines */}
+          {Array.from({ length: 8 }).map((_, i) => {
+            const angle = (i * 45) * (Math.PI / 180);
+            const x2 = 600 + Math.cos(angle) * 350;
+            const y2 = 400 + Math.sin(angle) * 350;
+            return (
+              <motion.line
+                key={`radial-${i}`}
+                x1="600"
+                y1="400"
+                x2={x2}
+                y2={y2}
+                stroke="url(#webGradient)"
+                strokeWidth="1"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 2, delay: i * 0.2 }}
+              />
+            );
+          })}
+          
+          {/* Concentric Circles */}
+          {Array.from({ length: 6 }).map((_, i) => {
+            const radius = (i + 1) * 50;
+            return (
+              <motion.circle
+                key={`circle-${i}`}
+                cx="600"
+                cy="400"
+                r={radius}
+                fill="none"
+                stroke="url(#webGradient)"
+                strokeWidth="1"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 3, delay: i * 0.3 }}
+              />
+            );
+          })}
+          
+          {/* Connection Nodes */}
+          {Array.from({ length: 24 }).map((_, i) => {
+            const ring = Math.floor(i / 8) + 1;
+            const angleIndex = i % 8;
+            const angle = (angleIndex * 45) * (Math.PI / 180);
+            const radius = ring * 50;
+            const x = 600 + Math.cos(angle) * radius;
+            const y = 400 + Math.sin(angle) * radius;
+            
+            return (
+              <motion.circle
+                key={`node-${i}`}
+                cx={x}
+                cy={y}
+                r="2"
+                fill="url(#webGradient)"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
+              />
+            );
+          })}
+          
+          {/* Cross Connections */}
+          {Array.from({ length: 16 }).map((_, i) => {
+            const ring1 = Math.floor(i / 8) + 1;
+            const ring2 = ring1 + 1;
+            const angleIndex = i % 8;
+            const angle1 = (angleIndex * 45) * (Math.PI / 180);
+            const angle2 = ((angleIndex + 1) * 45) * (Math.PI / 180);
+            
+            const x1 = 600 + Math.cos(angle1) * (ring1 * 50);
+            const y1 = 400 + Math.sin(angle1) * (ring1 * 50);
+            const x2 = 600 + Math.cos(angle2) * (ring1 * 50);
+            const y2 = 400 + Math.sin(angle2) * (ring1 * 50);
+            
+            return (
+              <motion.line
+                key={`cross-${i}`}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke="url(#webGradient)"
+                strokeWidth="0.5"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 2, delay: 2 + i * 0.1 }}
+              />
+            );
+          })}
+        </svg>
+        
+        {/* Floating Particles */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <motion.div
+            key={`particle-${i}`}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
+            style={{
+              left: `${20 + (i * 60) % 80}%`,
+              top: `${30 + (i * 40) % 60}%`,
+            }}
+            animate={{
+              y: [-10, 10, -10],
+              x: [-5, 5, -5],
+              opacity: [0.2, 0.6, 0.2],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.5,
+            }}
+          />
+        ))}
+        
+        {/* Glowing Orbs */}
+        {Array.from({ length: 6 }).map((_, i) => (
+          <motion.div
+            key={`orb-${i}`}
+            className="absolute w-20 h-20 rounded-full opacity-5 blur-xl"
+            style={{
+              background: `radial-gradient(circle, ${['#06b6d4', '#3b82f6', '#8b5cf6', '#06d6a0', '#f72585', '#ffd60a'][i]} 0%, transparent 70%)`,
+              left: `${10 + (i * 150) % 90}%`,
+              top: `${20 + (i * 120) % 80}%`,
+            }}
+            animate={{
+              scale: [1, 1.5, 1],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
       <motion.div
-        className="max-w-7xl mx-auto"
+        className="max-w-7xl mx-auto relative z-10"
         variants={containerVariants}
         initial="hidden"
         animate="visible"

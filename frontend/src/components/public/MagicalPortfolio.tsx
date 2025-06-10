@@ -34,6 +34,8 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
 
   useEffect(() => {
     const handleScroll = (e: WheelEvent) => {
+      e.preventDefault(); // Prevent default scroll behavior
+      
       if (isTransitioning) return;
 
       setIsTransitioning(true);
@@ -44,12 +46,55 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
         setCurrentSection(prev => prev - 1);
       }
 
-      setTimeout(() => setIsTransitioning(false), 1000);
+      setTimeout(() => setIsTransitioning(false), 800);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isTransitioning) return;
+
+      setIsTransitioning(true);
+      
+      if ((e.key === 'ArrowDown' || e.key === 'PageDown') && currentSection < sections.length - 1) {
+        setCurrentSection(prev => prev + 1);
+      } else if ((e.key === 'ArrowUp' || e.key === 'PageUp') && currentSection > 0) {
+        setCurrentSection(prev => prev - 1);
+      } else if (e.key >= '1' && e.key <= '4') {
+        const targetSection = parseInt(e.key) - 1;
+        if (targetSection >= 0 && targetSection < sections.length) {
+          setCurrentSection(targetSection);
+        }
+      } else {
+        setIsTransitioning(false); // Don't block if key isn't used
+        return;
+      }
+
+      setTimeout(() => setIsTransitioning(false), 800);
+    };
+
+    // Prevent all forms of scrolling
+    const preventScroll = (e: Event) => {
+      e.preventDefault();
     };
 
     if (!isLoading) {
+      // Add wheel event with preventDefault
       window.addEventListener('wheel', handleScroll, { passive: false });
-      return () => window.removeEventListener('wheel', handleScroll);
+      
+      // Add keyboard navigation
+      window.addEventListener('keydown', handleKeyDown);
+      
+      // Prevent touch scroll on mobile
+      document.addEventListener('touchmove', preventScroll, { passive: false });
+      
+      // Prevent other scroll methods
+      document.addEventListener('scroll', preventScroll, { passive: false });
+      
+      return () => {
+        window.removeEventListener('wheel', handleScroll);
+        window.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('touchmove', preventScroll);
+        document.removeEventListener('scroll', preventScroll);
+      };
     }
   }, [currentSection, isTransitioning, isLoading]);
 
@@ -76,7 +121,7 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
   const currentTheme = sections[currentSection]?.theme || 'cosmic';
 
   return (
-    <div className={`relative min-h-screen overflow-hidden ${className}`}>
+    <div className={`relative overflow-hidden ${className}`} style={{ height: '100vh', width: '100vw' }}>
       {/* Dynamic Background */}
       <motion.div 
         className={`fixed inset-0 bg-gradient-to-br ${getThemeColors(currentTheme)}`}

@@ -47,16 +47,27 @@ export const Navigation: React.FC<NavigationProps> = ({
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-cyan-400 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">SB</span>
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-cyan-400 rounded-full p-0.5 shadow-lg">
+              <div className="w-full h-full rounded-full overflow-hidden bg-black">
+                <img
+                  src="/profile.png"
+                  alt="Selma Bettaieb"
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    // Fallback to initials if image fails to load
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement!.innerHTML = '<div class="w-full h-full rounded-full bg-gradient-to-br from-purple-600 to-cyan-600 flex items-center justify-center text-white font-bold text-sm">SB</div>';
+                  }}
+                />
+              </div>
             </div>
             <div className="text-white font-semibold text-lg">
               Selma Bettaieb
             </div>
           </motion.div>
 
-          {/* Navigation Menu - Desktop */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Navigation Menu - Desktop - Positioned More Left */}
+          <div className="hidden md:flex items-center space-x-4 ml-8">
             {navItems.map((item) => {
               const IconComponent = item.icon;
               const isActive = currentSection === item.id;
@@ -65,16 +76,15 @@ export const Navigation: React.FC<NavigationProps> = ({
                 <motion.button
                   key={item.id}
                   onClick={() => onSectionChange(item.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
-                    isActive 
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-300 text-xs ${isActive 
                       ? 'bg-white/10 backdrop-blur-sm border border-white/20' 
                       : 'hover:bg-white/5'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <IconComponent className={`w-5 h-5 ${isActive ? item.color : 'text-gray-400'}`} />
-                  <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-400'}`}>
+                  <IconComponent className={`w-4 h-4 ${isActive ? item.color : 'text-gray-400'}`} />
+                  <span className={`text-xs font-medium ${isActive ? 'text-white' : 'text-gray-400'}`}>
                     {item.label}
                   </span>
                 </motion.button>
