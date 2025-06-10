@@ -1,3 +1,4 @@
+// Fixed TypeScript build issue - removed unused variables
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Award, Users, Brain, Leaf } from 'lucide-react';
