@@ -4,7 +4,6 @@ import { LoadingAnimation } from './LoadingAnimation';
 import { IdentityCard } from './IdentityCard';
 import { SkillsConstellation } from './SkillsConstellation';
 import { ProjectUniverse } from './ProjectUniverse';
-import { CulturalBridge } from './CulturalBridge';
 import { VolunteeringGalaxy } from './VolunteeringGalaxy';
 import { ContactNebula } from './ContactNebula';
 import { AIChatAssistant } from './AIChatAssistant';
@@ -37,7 +36,6 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
     { id: 'identity', component: IdentityCard, theme: 'cosmic' },
     { id: 'skills', component: SkillsConstellation, theme: 'stellar' },
     { id: 'projects', component: ProjectUniverse, theme: 'tech' },
-    { id: 'cultural', component: CulturalBridge, theme: 'bridge' },
     { id: 'volunteering', component: VolunteeringGalaxy, theme: 'global' },
     { id: 'contact', component: ContactNebula, theme: 'ethereal' }
   ];
@@ -126,8 +124,6 @@ export const MagicalPortfolio: React.FC<MagicalPortfolioProps> = ({ className = 
         return 'from-indigo-900 via-purple-900 to-pink-900';
       case 'tech':
         return 'from-blue-900 via-cyan-900 to-teal-900';
-      case 'bridge':
-        return 'from-emerald-900 via-teal-900 to-cyan-900';
       case 'global':
         return 'from-green-900 via-emerald-900 to-teal-900';
       case 'ethereal':
