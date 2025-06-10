@@ -239,7 +239,7 @@ export const ProjectUniverse: React.FC = () => {
         <AnimatePresence>
           {selectedProject && (
             <>
-              {/* Black Hole Effect */}
+              {/* Enhanced Cosmic Background */}
               <motion.div
                 className="fixed inset-0 z-50"
                 initial={{ scale: 0, opacity: 0 }}
@@ -247,14 +247,76 @@ export const ProjectUniverse: React.FC = () => {
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
               >
-                <div className="absolute inset-0 bg-black">
-                  {/* Spiral Effect */}
+                {/* Multi-layered Cosmic Background */}
+                <div className="absolute inset-0">
+                  {/* Base gradient instead of solid black */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+                  
+                  {/* Subtle project-themed gradient overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryTheme(selectedProject.category).gradient} opacity-5`} />
+                  
+                  {/* Animated cosmic particles */}
+                  <div className="absolute inset-0">
+                    {[...Array(50)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-px h-px bg-white rounded-full"
+                        animate={{
+                          opacity: [0, 1, 0],
+                          scale: [0, 1, 0],
+                        }}
+                        transition={{
+                          duration: Math.random() * 4 + 2,
+                          repeat: Infinity,
+                          delay: Math.random() * 3,
+                        }}
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Subtle animated nebula effect */}
                   <motion.div
-                    className="absolute inset-0"
+                    className={`absolute top-1/4 left-1/3 w-96 h-96 bg-gradient-radial ${getCategoryTheme(selectedProject.category).gradient} opacity-3 rounded-full blur-3xl`}
+                    animate={{
+                      scale: [1, 1.3, 1],
+                      opacity: [0.02, 0.05, 0.02],
+                      x: [-50, 50, -50],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  
+                  <motion.div
+                    className={`absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-radial ${getCategoryTheme(selectedProject.category).gradient} opacity-2 rounded-full blur-3xl`}
+                    animate={{
+                      scale: [1.2, 1, 1.2],
+                      opacity: [0.01, 0.04, 0.01],
+                      x: [30, -30, 30],
+                    }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 3,
+                    }}
+                  />
+
+                  {/* Project-specific spiral effect (more subtle) */}
+                  <motion.div
+                    className="absolute inset-0 opacity-60"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                     style={{
                       background: `conic-gradient(from 0deg, transparent 0deg, ${getCategoryTheme(selectedProject.category).gradient.split(' ')[1]} 180deg, transparent 360deg)`,
+                      maskImage: 'radial-gradient(circle at center, transparent 60%, black 100%)',
+                      WebkitMaskImage: 'radial-gradient(circle at center, transparent 60%, black 100%)',
                     }}
                   />
                 </div>

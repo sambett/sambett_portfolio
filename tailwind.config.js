@@ -41,6 +41,7 @@ export default {
         'neural-gradient': 'linear-gradient(135deg, #4C1D95, #0891B2)',
         'warm-gradient': 'linear-gradient(135deg, #EA580C, #F59E0B)',
         'global-gradient': 'linear-gradient(135deg, #0891B2, #059669)',
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
