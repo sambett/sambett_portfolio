@@ -107,6 +107,113 @@ export const ProjectUniverse: React.FC = () => {
     setSelectedTech('all');
   };
 
+  const getProjectTheme = (project: Project) => {
+    const color = project.color || 'blue'; // Use project color or default to blue
+    
+    switch (color.toLowerCase()) {
+      case 'blue':
+        return {
+          gradient: 'from-blue-500 via-cyan-500 to-blue-600',
+          bg: 'bg-blue-900/20',
+          border: 'border-blue-400/30',
+          icon: Brain,
+          color: 'text-blue-400',
+          accent: 'blue'
+        };
+      case 'purple':
+        return {
+          gradient: 'from-purple-500 via-indigo-500 to-purple-600',
+          bg: 'bg-purple-900/20',
+          border: 'border-purple-400/30',
+          icon: Brain,
+          color: 'text-purple-400',
+          accent: 'purple'
+        };
+      case 'green':
+        return {
+          gradient: 'from-green-500 via-emerald-500 to-green-600',
+          bg: 'bg-green-900/20',
+          border: 'border-green-400/30',
+          icon: Leaf,
+          color: 'text-green-400',
+          accent: 'green'
+        };
+      case 'red':
+        return {
+          gradient: 'from-red-500 via-pink-500 to-red-600',
+          bg: 'bg-red-900/20',
+          border: 'border-red-400/30',
+          icon: Users,
+          color: 'text-red-400',
+          accent: 'red'
+        };
+      case 'orange':
+        return {
+          gradient: 'from-orange-500 via-amber-500 to-orange-600',
+          bg: 'bg-orange-900/20',
+          border: 'border-orange-400/30',
+          icon: Users,
+          color: 'text-orange-400',
+          accent: 'orange'
+        };
+      case 'cyan':
+        return {
+          gradient: 'from-cyan-500 via-teal-500 to-cyan-600',
+          bg: 'bg-cyan-900/20',
+          border: 'border-cyan-400/30',
+          icon: Brain,
+          color: 'text-cyan-400',
+          accent: 'cyan'
+        };
+      case 'pink':
+        return {
+          gradient: 'from-pink-500 via-rose-500 to-pink-600',
+          bg: 'bg-pink-900/20',
+          border: 'border-pink-400/30',
+          icon: Users,
+          color: 'text-pink-400',
+          accent: 'pink'
+        };
+      case 'yellow':
+        return {
+          gradient: 'from-yellow-500 via-amber-500 to-yellow-600',
+          bg: 'bg-yellow-900/20',
+          border: 'border-yellow-400/30',
+          icon: Users,
+          color: 'text-yellow-400',
+          accent: 'yellow'
+        };
+      case 'indigo':
+        return {
+          gradient: 'from-indigo-500 via-blue-500 to-indigo-600',
+          bg: 'bg-indigo-900/20',
+          border: 'border-indigo-400/30',
+          icon: Brain,
+          color: 'text-indigo-400',
+          accent: 'indigo'
+        };
+      case 'teal':
+        return {
+          gradient: 'from-teal-500 via-emerald-500 to-teal-600',
+          bg: 'bg-teal-900/20',
+          border: 'border-teal-400/30',
+          icon: Leaf,
+          color: 'text-teal-400',
+          accent: 'teal'
+        };
+      default:
+        return {
+          gradient: 'from-blue-500 via-cyan-500 to-blue-600',
+          bg: 'bg-blue-900/20',
+          border: 'border-blue-400/30',
+          icon: Brain,
+          color: 'text-blue-400',
+          accent: 'blue'
+        };
+    }
+  };
+
+  // Keep the old function for fallback/category-based themes
   const getCategoryTheme = (category: string) => {
     switch (category.toLowerCase()) {
       case 'ai':

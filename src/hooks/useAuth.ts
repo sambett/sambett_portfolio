@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminApi, isBackendAvailable } from '../utils/api';
+import { adminApi } from '../utils/api';
 import { AuthState } from '../types';
 
 export const useAuth = (): AuthState & {
@@ -9,52 +9,47 @@ export const useAuth = (): AuthState & {
 } => {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
-    loading: false, // Changed to false to avoid immediate API call
+    loading: true,
     isAuthenticated: false,
   });
   
   const navigate = useNavigate();
 
-  const checkAuth = async () => {
-    try {
-      // If backend is not available, don't attempt auth check
-      if (!isBackendAvailable()) {
-        setAuthState({ user: null, loading: false, isAuthenticated: false });
-        return;
-      }
+  // Check if user is authenticated on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+          setAuthState({ user: null, loading: false, isAuthenticated: false });
+          return;
+        }
 
-      // Check if we have a token in localStorage
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        setAuthState({ user: null, loading: false, isAuthenticated: false });
-        return;
+        const response = await adminApi.checkAuth();
+        setAuthState({ 
+          user: response.admin, 
+          loading: false, 
+          isAuthenticated: true 
+        });
+      } catch (error) {
+        // Token is invalid, remove it
+        localStorage.removeItem('adminToken');
+        setAuthState({ 
+          user: null, 
+          loading: false, 
+          isAuthenticated: false 
+        });
       }
+    };
 
-      // Only verify token if we have one
-      setAuthState(prev => ({ ...prev, loading: true }));
-      const response = await adminApi.checkAuth();
-      setAuthState({ 
-        user: response.admin, 
-        loading: false, 
-        isAuthenticated: true 
-      });
-    } catch (error) {
-      console.error('Auth check failed:', error);
-      // Token is invalid, remove it
-      localStorage.removeItem('adminToken');
-      setAuthState({ 
-        user: null, 
-        loading: false, 
-        isAuthenticated: false 
-      });
-    }
-  };
+    checkAuth();
+  }, []);
 
   const login = async (username: string, password: string): Promise<void> => {
     try {
       const response = await adminApi.login(password);
       
-      // Store token in localStorage
+      // Store token
       if (response.token) {
         localStorage.setItem('adminToken', response.token);
       }
@@ -79,7 +74,7 @@ export const useAuth = (): AuthState & {
 
   const logout = (): void => {
     try {
-      adminApi.logout().catch(console.error); // Don't wait for this
+      adminApi.logout().catch(console.error);
       localStorage.removeItem('adminToken');
       setAuthState({ 
         user: null, 
@@ -91,16 +86,6 @@ export const useAuth = (): AuthState & {
       console.error('Logout error:', error);
     }
   };
-
-  // Only check auth if we have a token and backend is available
-  useEffect(() => {
-    if (isBackendAvailable()) {
-      const token = localStorage.getItem('adminToken');
-      if (token) {
-        checkAuth();
-      }
-    }
-  }, []);
 
   return {
     ...authState,

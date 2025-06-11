@@ -5,13 +5,21 @@
       "title": "NeuroRAG",
       "description": "Hackathon-winning conversational AI using retrieval-augmented generation. Judges praised it as 'most practical AI application.'",
       "category": "AI",
-      "techStack": ["RAG", "NLP", "Python", "Streamlit"],
+      "techStack": [
+        "RAG",
+        "NLP",
+        "Python",
+        "Streamlit"
+      ],
       "githubUrl": "https://github.com/sambett/neurorag",
       "demoUrl": "",
       "images": [],
       "featured": true,
-      "awards": ["🏆 Hackathon Winner"],
+      "awards": [
+        "🏆 Hackathon Winner"
+      ],
       "impact": "Most practical AI application according to judges",
+      "color": "purple",
       "createdAt": "2024-01-15T00:00:00.000Z",
       "updatedAt": "2024-01-15T00:00:00.000Z",
       "published": true
@@ -21,12 +29,18 @@
       "title": "DocConnect & Student Housing",
       "description": "Real-time professor availability tracking + comprehensive housing platform serving 200+ students in Tunisia.",
       "category": "Optimization",
-      "techStack": ["Spring Boot", "Angular", "MySQL", "React"],
+      "techStack": [
+        "Spring Boot",
+        "Angular",
+        "MySQL",
+        "React"
+      ],
       "githubUrl": "https://github.com/sambett/docconnect",
       "demoUrl": "",
       "images": [],
       "featured": true,
       "impact": "Serving 200+ students with improved academic communication",
+      "color": "green",
       "createdAt": "2023-09-01T00:00:00.000Z",
       "updatedAt": "2023-09-01T00:00:00.000Z",
       "published": true
@@ -36,12 +50,18 @@
       "title": "Helmet Detection System",
       "description": "95% accuracy real-time safety monitoring using YOLOv8 computer vision for construction site safety.",
       "category": "AI",
-      "techStack": ["YOLOv8", "Computer Vision", "Python", "Streamlit"],
+      "techStack": [
+        "YOLOv8",
+        "Computer Vision",
+        "Python",
+        "Streamlit"
+      ],
       "githubUrl": "https://github.com/sambett/helmet-detection",
       "demoUrl": "",
       "images": [],
       "featured": true,
       "impact": "95% accuracy in preventing construction site accidents",
+      "color": "blue",
       "createdAt": "2023-11-01T00:00:00.000Z",
       "updatedAt": "2023-11-01T00:00:00.000Z",
       "published": true
@@ -51,12 +71,18 @@
       "title": "GreenCode AI",
       "description": "AI-powered code optimization for energy efficiency using StarCoder. Automatically detects and fixes energy-wasting patterns.",
       "category": "Sustainability",
-      "techStack": ["StarCoder", "Flask", "CodeCarbon", "Sustainability"],
+      "techStack": [
+        "StarCoder",
+        "Flask",
+        "CodeCarbon",
+        "Sustainability"
+      ],
       "githubUrl": "https://github.com/sambett/greencode-ai",
       "demoUrl": "",
       "images": [],
       "featured": false,
       "impact": "Automated energy-efficient code optimization",
+      "color": "teal",
       "createdAt": "2024-03-01T00:00:00.000Z",
       "updatedAt": "2024-03-01T00:00:00.000Z",
       "published": true
@@ -66,12 +92,18 @@
       "title": "Twise Sentiment Analysis",
       "description": "Event feedback AI that analyzes participant sentiment in real-time to help organizers improve future events.",
       "category": "Social",
-      "techStack": ["NLP", "Sentiment Analysis", "TypeScript", "Real-time"],
+      "techStack": [
+        "NLP",
+        "Sentiment Analysis",
+        "TypeScript",
+        "Real-time"
+      ],
       "githubUrl": "https://github.com/sambett/twise-sentiment",
       "demoUrl": "",
       "images": [],
       "featured": false,
       "impact": "Real-time event optimization through sentiment analysis",
+      "color": "red",
       "createdAt": "2023-07-01T00:00:00.000Z",
       "updatedAt": "2023-07-01T00:00:00.000Z",
       "published": true
@@ -81,12 +113,18 @@
       "title": "Agricultural Health Analytics",
       "description": "ML-powered risk assessment dashboard for female farmers with predictive modeling and health analysis.",
       "category": "Social",
-      "techStack": ["Random Forest", "FastAPI", "Data Science", "Healthcare"],
+      "techStack": [
+        "Random Forest",
+        "FastAPI",
+        "Data Science",
+        "Healthcare"
+      ],
       "githubUrl": "https://github.com/sambett/agricultural-health",
       "demoUrl": "",
       "images": [],
       "featured": false,
       "impact": "Supporting female farmers with data-driven health insights",
+      "color": "pink",
       "createdAt": "2023-05-01T00:00:00.000Z",
       "updatedAt": "2023-05-01T00:00:00.000Z",
       "published": true

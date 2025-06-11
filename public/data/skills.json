@@ -1,0 +1,340 @@
+{
+  "skillCategories": [
+    {
+      "id": "ai-ml",
+      "name": "AI & Machine Learning",
+      "icon": "Brain",
+      "color": "text-purple-400",
+      "gradient": "from-purple-500 to-pink-500",
+      "description": "Building intelligent systems that solve real-world problems",
+      "skills": [
+        {
+          "id": "rag-systems",
+          "name": "RAG Systems",
+          "category": "AI",
+          "proficiency": 9,
+          "years": 2,
+          "color": "bg-purple-500",
+          "projects": ["NeuroRAG"],
+          "certifications": ["AI Specialization"],
+          "description": "Retrieval-Augmented Generation for accurate, source-backed AI responses"
+        },
+        {
+          "id": "computer-vision",
+          "name": "Computer Vision",
+          "category": "AI",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-pink-500",
+          "projects": ["Helmet Detection"],
+          "description": "Object detection and image analysis for safety applications"
+        },
+        {
+          "id": "nlp",
+          "name": "NLP",
+          "category": "AI",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-indigo-500",
+          "projects": ["NeuroRAG"],
+          "description": "Natural Language Processing for conversational AI systems"
+        },
+        {
+          "id": "tensorflow",
+          "name": "TensorFlow",
+          "category": "AI",
+          "proficiency": 7,
+          "years": 1.5,
+          "color": "bg-orange-500",
+          "description": "Deep learning framework for scalable AI model development"
+        },
+        {
+          "id": "pytorch",
+          "name": "PyTorch",
+          "category": "AI",
+          "proficiency": 7,
+          "years": 1,
+          "color": "bg-red-500",
+          "description": "Dynamic neural network framework for research and production"
+        },
+        {
+          "id": "streamlit",
+          "name": "Streamlit",
+          "category": "AI",
+          "proficiency": 8,
+          "years": 1.5,
+          "color": "bg-green-500",
+          "projects": ["NeuroRAG"],
+          "description": "Rapid AI application prototyping and deployment"
+        }
+      ]
+    },
+    {
+      "id": "frontend",
+      "name": "Frontend Development",
+      "icon": "Code",
+      "color": "text-cyan-400",
+      "gradient": "from-cyan-500 to-blue-500",
+      "description": "Creating beautiful, interactive user experiences",
+      "skills": [
+        {
+          "id": "react",
+          "name": "React",
+          "category": "Frontend",
+          "proficiency": 9,
+          "years": 3,
+          "color": "bg-cyan-500",
+          "projects": ["Portfolio", "DocConnect"],
+          "description": "Component-based UI development with modern React patterns"
+        },
+        {
+          "id": "typescript",
+          "name": "TypeScript",
+          "category": "Frontend",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-blue-500",
+          "projects": ["Portfolio"],
+          "description": "Type-safe JavaScript for robust application development"
+        },
+        {
+          "id": "framer-motion",
+          "name": "Framer Motion",
+          "category": "Frontend",
+          "proficiency": 8,
+          "years": 1,
+          "color": "bg-purple-500",
+          "projects": ["Portfolio"],
+          "description": "Advanced animations and micro-interactions"
+        },
+        {
+          "id": "tailwind",
+          "name": "Tailwind CSS",
+          "category": "Frontend",
+          "proficiency": 9,
+          "years": 2,
+          "color": "bg-teal-500",
+          "projects": ["Portfolio", "DocConnect"],
+          "description": "Utility-first CSS framework for rapid UI development"
+        },
+        {
+          "id": "javascript",
+          "name": "JavaScript",
+          "category": "Frontend",
+          "proficiency": 9,
+          "years": 4,
+          "color": "bg-yellow-500",
+          "description": "Modern ES6+ JavaScript for dynamic web applications"
+        },
+        {
+          "id": "html-css",
+          "name": "HTML/CSS",
+          "category": "Frontend",
+          "proficiency": 9,
+          "years": 4,
+          "color": "bg-orange-500",
+          "description": "Semantic markup and responsive styling fundamentals"
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "name": "Backend & Database",
+      "icon": "Server",
+      "color": "text-green-400",
+      "gradient": "from-green-500 to-emerald-500",
+      "description": "Building scalable server-side solutions and data management",
+      "skills": [
+        {
+          "id": "nodejs",
+          "name": "Node.js",
+          "category": "Backend",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-green-500",
+          "projects": ["DocConnect", "Portfolio API"],
+          "description": "Server-side JavaScript runtime for scalable applications"
+        },
+        {
+          "id": "express",
+          "name": "Express.js",
+          "category": "Backend",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-gray-600",
+          "projects": ["DocConnect"],
+          "description": "Minimal web framework for Node.js API development"
+        },
+        {
+          "id": "mongodb",
+          "name": "MongoDB",
+          "category": "Backend",
+          "proficiency": 7,
+          "years": 1.5,
+          "color": "bg-green-600",
+          "projects": ["DocConnect"],
+          "description": "NoSQL database for flexible, document-based data storage"
+        },
+        {
+          "id": "postgresql",
+          "name": "PostgreSQL",
+          "category": "Backend",
+          "proficiency": 6,
+          "years": 1,
+          "color": "bg-blue-600",
+          "description": "Relational database for complex data relationships"
+        },
+        {
+          "id": "rest-apis",
+          "name": "REST APIs",
+          "category": "Backend",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-indigo-600",
+          "projects": ["DocConnect"],
+          "description": "RESTful service design and implementation"
+        },
+        {
+          "id": "authentication",
+          "name": "Authentication",
+          "category": "Backend",
+          "proficiency": 7,
+          "years": 1.5,
+          "color": "bg-red-600",
+          "projects": ["Portfolio Admin"],
+          "description": "Secure user authentication and authorization systems"
+        }
+      ]
+    },
+    {
+      "id": "devops",
+      "name": "Tools & DevOps",
+      "icon": "Database",
+      "color": "text-orange-400",
+      "gradient": "from-orange-500 to-red-500",
+      "description": "Development tools and deployment infrastructure",
+      "skills": [
+        {
+          "id": "git",
+          "name": "Git/GitHub",
+          "category": "DevOps",
+          "proficiency": 9,
+          "years": 4,
+          "color": "bg-gray-700",
+          "description": "Version control and collaborative development workflows"
+        },
+        {
+          "id": "docker",
+          "name": "Docker",
+          "category": "DevOps",
+          "proficiency": 6,
+          "years": 1,
+          "color": "bg-blue-600",
+          "description": "Containerization for consistent deployment environments"
+        },
+        {
+          "id": "vercel",
+          "name": "Vercel",
+          "category": "DevOps",
+          "proficiency": 8,
+          "years": 1.5,
+          "color": "bg-black",
+          "projects": ["Portfolio"],
+          "description": "Modern deployment platform for frontend applications"
+        },
+        {
+          "id": "vscode",
+          "name": "VS Code",
+          "category": "DevOps",
+          "proficiency": 9,
+          "years": 4,
+          "color": "bg-blue-500",
+          "description": "Advanced code editing with extensions and debugging"
+        },
+        {
+          "id": "figma",
+          "name": "Figma",
+          "category": "DevOps",
+          "proficiency": 7,
+          "years": 2,
+          "color": "bg-purple-600",
+          "description": "UI/UX design and prototyping for development"
+        },
+        {
+          "id": "postman",
+          "name": "Postman",
+          "category": "DevOps",
+          "proficiency": 8,
+          "years": 2,
+          "color": "bg-orange-500",
+          "description": "API testing and documentation tools"
+        }
+      ]
+    },
+    {
+      "id": "global",
+      "name": "Languages & Global",
+      "icon": "Globe",
+      "color": "text-emerald-400",
+      "gradient": "from-emerald-500 to-teal-500",
+      "description": "Cross-cultural communication and global collaboration",
+      "skills": [
+        {
+          "id": "arabic",
+          "name": "Arabic",
+          "category": "Language",
+          "proficiency": 10,
+          "years": 22,
+          "color": "bg-green-600",
+          "description": "Native language enabling Middle East and North Africa engagement"
+        },
+        {
+          "id": "french",
+          "name": "French",
+          "category": "Language",
+          "proficiency": 9,
+          "years": 15,
+          "color": "bg-blue-600",
+          "description": "Professional fluency for francophone market opportunities"
+        },
+        {
+          "id": "english",
+          "name": "English",
+          "category": "Language",
+          "proficiency": 9,
+          "years": 10,
+          "color": "bg-red-600",
+          "description": "International communication and technical documentation"
+        },
+        {
+          "id": "turkish",
+          "name": "Turkish",
+          "category": "Language",
+          "proficiency": 6,
+          "years": 1,
+          "color": "bg-red-500",
+          "description": "Conversational level from AIESEC volunteer experience"
+        },
+        {
+          "id": "spanish",
+          "name": "Spanish",
+          "category": "Language",
+          "proficiency": 5,
+          "years": 2,
+          "color": "bg-yellow-600",
+          "description": "Basic communication for Latin American markets"
+        },
+        {
+          "id": "cross-cultural",
+          "name": "Cross-cultural",
+          "category": "Global",
+          "proficiency": 9,
+          "years": 3,
+          "color": "bg-purple-600",
+          "projects": ["AIESEC Volunteer"],
+          "description": "Multicultural team leadership and global project management"
+        }
+      ]
+    }
+  ]
+}
