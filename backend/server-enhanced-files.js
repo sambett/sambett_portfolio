@@ -246,6 +246,153 @@ const authenticateToken = (req, res, next) => {
 app.use('/media', express.static(MEDIA_DIR));
 
 // =============================================================================
+// ROOT HEALTH DASHBOARD
+// =============================================================================
+
+// Beautiful Backend Health Dashboard
+app.get('/', (req, res) => {
+  const welcomeHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Backend - Selma Bettaieb</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: white;
+            line-height: 1.6;
+        }
+        .container { 
+            text-align: center; 
+            max-width: 600px; 
+            padding: 40px; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 20px; 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            font-size: 3rem; 
+            margin-bottom: 20px; 
+            background: linear-gradient(45deg, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .subtitle { 
+            font-size: 1.2rem; 
+            margin-bottom: 30px; 
+            opacity: 0.9; 
+        }
+        .status { 
+            display: inline-block; 
+            background: #10b981; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        .links { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-top: 30px; 
+        }
+        .link { 
+            display: block; 
+            padding: 15px 20px; 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 12px; 
+            text-decoration: none; 
+            color: white; 
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .link:hover { 
+            background: rgba(255,255,255,0.2); 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .api-list { 
+            text-align: left; 
+            background: rgba(0,0,0,0.2); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-top: 30px; 
+        }
+        .api-list h3 { 
+            margin-bottom: 15px; 
+            color: #a78bfa; 
+        }
+        .api-list code { 
+            display: block; 
+            padding: 5px 0; 
+            font-family: 'SF Mono', Monaco, monospace; 
+            font-size: 0.9rem; 
+            opacity: 0.9; 
+        }
+        .footer { 
+            margin-top: 30px; 
+            opacity: 0.7; 
+            font-size: 0.9rem; 
+        }
+        @media (max-width: 600px) {
+            .container { padding: 30px 20px; }
+            h1 { font-size: 2.5rem; }
+            .links { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Portfolio Backend</h1>
+        <p class="subtitle">Enhanced Content Management System</p>
+        <div class="status">🟢 Server Running</div>
+        
+        <p>Backend server for <strong>Selma Bettaieb's AI Portfolio</strong> - managing projects, global experiences, CV uploads, and certificates with a clean, modular approach.</p>
+        
+        <div class="links">
+            <a href="/admin" class="link">🔧 Admin Panel</a>
+            <a href="/api/health" class="link">📊 API Health</a>
+            <a href="/api/projects" class="link">📁 Projects API</a>
+            <a href="/api/documents" class="link">📄 Documents API</a>
+        </div>
+        
+        <div class="api-list">
+            <h3>🔗 Available Endpoints</h3>
+            <code>GET  /api/projects - Get all projects</code>
+            <code>GET  /api/experiences - Get global experiences</code>
+            <code>GET  /api/documents - Get CV and certificates</code>
+            <code>GET  /api/cv/download - Download current CV</code>
+            <code>POST /api/contact - Contact form submission</code>
+            <code>POST /admin/login - Admin authentication</code>
+            <code>GET  /admin - Enhanced admin dashboard</code>
+        </div>
+        
+        <div class="footer">
+            <p>✨ Built with Express.js • File Uploads • Authentication • Scalable</p>
+            <p>Port: ${PORT} • Time: ${new Date().toLocaleString()}</p>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+  
+  res.send(welcomeHTML);
+});
+
+// =============================================================================
 // PUBLIC API ROUTES
 // =============================================================================
 
